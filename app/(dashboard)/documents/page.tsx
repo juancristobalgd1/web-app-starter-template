@@ -1,3 +1,5 @@
+"use client";
+
 import { PageHeader } from "@/components/shared/page-header";
 import { AnimatedFab } from "@/components/ui/animated-fab";
 import { FileText, Plus } from "lucide-react";

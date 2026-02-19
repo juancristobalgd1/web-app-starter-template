@@ -1,3 +1,5 @@
+"use client";
+
 import { PageHeader } from "@/components/shared/page-header";
 import { AnimatedFab } from "@/components/ui/animated-fab";
 import { GlassCard } from "@/components/ui/satin-liquid-glass";
