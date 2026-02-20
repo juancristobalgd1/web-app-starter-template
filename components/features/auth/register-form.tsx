@@ -5,24 +5,34 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { GlassCard } from "@/components/ui/satin-liquid-glass";
 import { Mail, Lock, User, Eye, EyeOff } from "lucide-react";
+import { useAuth } from "@/components/providers/auth-provider";
+import { useRouter } from "next/navigation";
 
 interface RegisterFormProps {
   onLogin: () => void;
 }
 
 export function RegisterForm({ onLogin }: RegisterFormProps) {
-  const [name,     setName]     = useState("");
-  const [email,    setEmail]    = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPass, setShowPass] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  const { signUp } = useAuth();
+  const router = useRouter();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    // TODO: implementar registro con tu proveedor de auth
-    await new Promise((r) => setTimeout(r, 1000));
-    setIsLoading(false);
+    try {
+      await signUp(email, password, name);
+      router.push("/dashboard");
+    } catch (error) {
+      console.error("Register error:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

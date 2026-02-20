@@ -5,24 +5,34 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { GlassCard } from "@/components/ui/satin-liquid-glass";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { useAuth } from "@/components/providers/auth-provider";
+import { useRouter } from "next/navigation";
 
 interface LoginFormProps {
-  onRegister:       () => void;
+  onRegister: () => void;
   onForgotPassword: () => void;
 }
 
 export function LoginForm({ onRegister, onForgotPassword }: LoginFormProps) {
-  const [email,    setEmail]    = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPass, setShowPass] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  const { signIn } = useAuth();
+  const router = useRouter();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    // TODO: implementar login con tu proveedor de auth
-    await new Promise((r) => setTimeout(r, 1000));
-    setIsLoading(false);
+    try {
+      await signIn(email, password);
+      router.push("/dashboard");
+    } catch (error) {
+      console.error("Login error:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
