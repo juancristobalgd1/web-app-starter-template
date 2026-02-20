@@ -57,7 +57,7 @@ export function Header({ title, showBack, rightActions, className }: HeaderProps
                 "sticky top-0 z-[100] w-full flex-shrink-0",
                 "pt-[env(safe-area-inset-top)]",
                 "transition-all duration-300 ease-in-out",
-                showShadow ? "border-b border-border shadow-sm" : "border-b border-transparent",
+                showShadow ? "shadow-sm" : "",
                 className
             )}
         >
@@ -70,7 +70,9 @@ export function Header({ title, showBack, rightActions, className }: HeaderProps
                 className="w-full h-14 md:h-16 flex items-center justify-between px-4"
                 style={{
                     border: 'none',
-                    backgroundColor: showShadow ? 'hsl(var(--background) / 0.8)' : 'transparent',
+                    backgroundColor: showShadow ? 'hsl(var(--background) / 0.7)' : 'transparent',
+                    backdropFilter: showShadow ? 'blur(12px) saturate(180%)' : 'none',
+                    WebkitBackdropFilter: showShadow ? 'blur(12px) saturate(180%)' : 'none',
                 }}
             >
                 {/* Left Section */}
@@ -110,7 +112,7 @@ export function Header({ title, showBack, rightActions, className }: HeaderProps
                             <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full">
                                 <Bell className="h-5 w-5" />
                             </Button>
-                            <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center border border-border cursor-pointer hover:bg-muted/80 transition-colors ml-1">
+                            <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center cursor-pointer hover:bg-muted/80 transition-colors ml-1">
                                 <User className="h-4 w-4 text-muted-foreground" />
                             </div>
                         </>

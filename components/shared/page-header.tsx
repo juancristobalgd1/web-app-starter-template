@@ -19,7 +19,6 @@ export function PageHeader({ title, subtitle, right, className }: PageHeaderProp
         "flex items-center justify-between",
         "px-4 py-3 min-h-[56px]",
         "bg-background/80 backdrop-blur-md",
-        "border-b border-border",
         "header-shadow-animation",
         "safe-top",
         className

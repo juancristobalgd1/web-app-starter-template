@@ -8,12 +8,12 @@ import { Menu, X } from "lucide-react";
 
 interface Links {
   label: string;
-  href:  string;
-  icon:  React.ReactElement | React.ReactNode;
+  href: string;
+  icon: React.ReactElement | React.ReactNode;
 }
 
 interface SidebarContextProps {
-  open:    boolean;
+  open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   animate: boolean;
 }
@@ -38,7 +38,7 @@ export const SidebarProvider = ({
   animate?: boolean;
 }) => {
   const [openState, setOpenState] = useState(false);
-  const open    = openProp    !== undefined ? openProp    : openState;
+  const open = openProp !== undefined ? openProp : openState;
   const setOpen = setOpenProp !== undefined ? setOpenProp : setOpenState;
   return (
     <SidebarContext.Provider value={{ open, setOpen, animate }}>
@@ -79,7 +79,7 @@ export const DesktopSidebar = ({ className, children, ...props }: React.Componen
     <motion.div
       className={cn(
         "h-full py-4 hidden md:flex md:flex-col bg-sidebar w-[var(--sidebar-width)]",
-        "flex-shrink-0 px-0 relative z-[100] border-r border-sidebar-border",
+        "flex-shrink-0 px-0 relative z-[100]",
         className
       )}
       style={{ "--sidebar-width": animate ? (open ? "300px" : "60px") : "300px" } as React.CSSProperties}

@@ -11,26 +11,26 @@ const glassConfig = {
   light: {
     satin: {
       background: "rgba(255, 255, 255, 0.65)",
-      border: "1px solid rgba(255, 255, 255, 0.5)",
+      border: "1px solid rgba(255, 255, 255, 0.4)",
       boxShadow: `
         inset 0 0 0 1px rgba(255,255,255,0.8),
         inset 2px 3px 0px -2px rgba(255,255,255,1),
         inset -2px -2px 0px -2px rgba(255,255,255,0.9),
         inset -3px -8px 2px -6px rgba(255,255,255,0.7),
-        inset -0.5px -1px 4px 0px rgba(0,0,0,0.08),
-        inset -2px 3px 1px -2px rgba(0,0,0,0.1),
-        inset 0px 4px 6px -3px rgba(0,0,0,0.1),
-        inset 2px -6px 2px -4px rgba(0,0,0,0.05),
-        0px 2px 8px 0px rgba(0,0,0,0.08),
-        0px 8px 32px 0px rgba(0,0,0,0.12)
+        inset -0.5px -1px 4px 0px rgba(0,0,0,0.03),
+        inset -2px 3px 1px -2px rgba(0,0,0,0.04),
+        inset 0px 4px 6px -3px rgba(0,0,0,0.04),
+        inset 2px -6px 2px -4px rgba(0,0,0,0.02),
+        0px 2px 8px 0px rgba(0,0,0,0.04),
+        0px 8px 32px 0px rgba(0,0,0,0.06)
       `,
     },
     natural: {
       background: "rgba(255, 255, 255, 0.5)",
-      border: "1px solid rgba(255, 255, 255, 0.3)",
+      border: "1px solid rgba(255, 255, 255, 0.2)",
       boxShadow: `
-        0px 2px 8px 0px rgba(0,0,0,0.06),
-        0px 8px 24px 0px rgba(0,0,0,0.08)
+        0px 2px 8px 0px rgba(0,0,0,0.03),
+        0px 8px 24px 0px rgba(0,0,0,0.04)
       `,
     },
     primary: {
@@ -96,17 +96,17 @@ const intensityConfig = {
 
 const radiusConfig = {
   none: "0px",
-  sm:   "8px",
-  md:   "12px",
-  lg:   "16px",
-  xl:   "20px",
+  sm: "8px",
+  md: "12px",
+  lg: "16px",
+  xl: "20px",
   "2xl": "24px",
   "3xl": "32px",
   full: "9999px",
 };
 
 type Intensity = keyof typeof intensityConfig;
-type Radius    = keyof typeof radiusConfig;
+type Radius = keyof typeof radiusConfig;
 
 interface LiquidGlassProps<T extends ElementType = "div"> {
   as?: T;
@@ -131,7 +131,7 @@ export function LiquidGlass<T extends ElementType = "div">({
   radius = "2xl",
   satin = true,
   variant,
-  disableHover  = false,
+  disableHover = false,
   disableActive = false,
   style,
   ...props
@@ -148,26 +148,26 @@ export function LiquidGlass<T extends ElementType = "div">({
     return () => { observer.disconnect(); mq.removeEventListener("change", check); };
   }, []);
 
-  const Component    = as || "div";
-  const themeConfig  = isDark ? glassConfig.dark : glassConfig.light;
+  const Component = as || "div";
+  const themeConfig = isDark ? glassConfig.dark : glassConfig.light;
   const resolvedVariant = variant || (satin ? "satin" : "natural");
   const currentGlass = themeConfig[resolvedVariant];
   const currentIntensity = intensityConfig[intensity];
-  const currentRadius    = radiusConfig[radius];
+  const currentRadius = radiusConfig[radius];
 
   const adjustedBackground = resolvedVariant === "primary"
     ? currentGlass.background
     : currentGlass.background.replace(
-        /[\d.]+\)$/,
-        `${resolvedVariant === "satin" ? currentIntensity.opacity + 0.1 : currentIntensity.opacity})`
-      );
+      /[\d.]+\)$/,
+      `${resolvedVariant === "satin" ? currentIntensity.opacity + 0.1 : currentIntensity.opacity})`
+    );
 
   const glassStyle: React.CSSProperties = {
-    background:          adjustedBackground,
-    backdropFilter:      `blur(${currentIntensity.blur}px) saturate(${currentIntensity.saturate}%)`,
-    WebkitBackdropFilter:`blur(${currentIntensity.blur}px) saturate(${currentIntensity.saturate}%)`,
-    border:      currentGlass.border,
-    boxShadow:   currentGlass.boxShadow,
+    background: adjustedBackground,
+    backdropFilter: `blur(${currentIntensity.blur}px) saturate(${currentIntensity.saturate}%)`,
+    WebkitBackdropFilter: `blur(${currentIntensity.blur}px) saturate(${currentIntensity.saturate}%)`,
+    border: currentGlass.border,
+    boxShadow: currentGlass.boxShadow,
     borderRadius: currentRadius,
     ...style,
   };
@@ -191,7 +191,7 @@ export function useLiquidGlass(options?: {
 }) {
   const [isDark, setIsDark] = useState(false);
   const intensity = options?.intensity || "medium";
-  const variant   = options?.variant || (options?.satin === false ? "natural" : "satin");
+  const variant = options?.variant || (options?.satin === false ? "natural" : "satin");
 
   useEffect(() => {
     const check = () => setIsDark(document.documentElement.classList.contains("dark"));
@@ -201,24 +201,24 @@ export function useLiquidGlass(options?: {
     return () => observer.disconnect();
   }, []);
 
-  const themeConfig    = isDark ? glassConfig.dark : glassConfig.light;
-  const currentGlass   = themeConfig[variant];
+  const themeConfig = isDark ? glassConfig.dark : glassConfig.light;
+  const currentGlass = themeConfig[variant];
   const currentIntensity = intensityConfig[intensity];
 
   const adjustedBackground = variant === "primary"
     ? currentGlass.background
     : currentGlass.background.replace(
-        /[\d.]+\)$/,
-        `${variant === "satin" ? currentIntensity.opacity + 0.1 : currentIntensity.opacity})`
-      );
+      /[\d.]+\)$/,
+      `${variant === "satin" ? currentIntensity.opacity + 0.1 : currentIntensity.opacity})`
+    );
 
   return {
     isDark,
     style: {
-      background:          adjustedBackground,
-      backdropFilter:      `blur(${currentIntensity.blur}px) saturate(${currentIntensity.saturate}%)`,
-      WebkitBackdropFilter:`blur(${currentIntensity.blur}px) saturate(${currentIntensity.saturate}%)`,
-      border:    currentGlass.border,
+      background: adjustedBackground,
+      backdropFilter: `blur(${currentIntensity.blur}px) saturate(${currentIntensity.saturate}%)`,
+      WebkitBackdropFilter: `blur(${currentIntensity.blur}px) saturate(${currentIntensity.saturate}%)`,
+      border: currentGlass.border,
       boxShadow: currentGlass.boxShadow,
     } as React.CSSProperties,
   };
