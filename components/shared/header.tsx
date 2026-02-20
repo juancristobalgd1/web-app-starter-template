@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { LiquidGlass } from "@/components/ui/satin-liquid-glass";
 import {
     ArrowLeft,
     Search,
@@ -63,7 +64,15 @@ export function Header({ title, showBack, rightActions, className, businessName 
                             <ArrowLeft className="h-5 w-5 text-foreground" />
                         </button>
                     ) : (
-                        <button className="flex items-center gap-2 hover:bg-black/5 rounded-xl px-2 py-1.5 transition-colors -ml-1">
+                        <LiquidGlass
+                            as="button"
+                            intensity="subtle"
+                            satin={false}
+                            radius="xl"
+                            disableActive={false}
+                            className="flex items-center gap-2 -ml-1 px-2 py-1.5 cursor-pointer"
+                            style={{ boxShadow: "none", border: "none", backgroundColor: "transparent" }}
+                        >
                             <div className="w-7 h-7 rounded-full bg-primary flex items-center justify-center flex-shrink-0 shadow-sm">
                                 <Store className="h-3.5 w-3.5 text-primary-foreground" />
                             </div>
@@ -71,7 +80,7 @@ export function Header({ title, showBack, rightActions, className, businessName 
                                 {title ?? businessName}
                             </span>
                             <ChevronDown className="h-3.5 w-3.5 text-muted-foreground mt-px" strokeWidth={2.5} />
-                        </button>
+                        </LiquidGlass>
                     )}
                 </div>
 
@@ -79,12 +88,26 @@ export function Header({ title, showBack, rightActions, className, businessName 
                 <div className="flex items-center gap-0.5">
                     {rightActions ?? (
                         <>
-                            <button className="h-9 w-9 rounded-full flex items-center justify-center hover:bg-black/5 transition-colors">
+                            <LiquidGlass
+                                as="button"
+                                intensity="subtle"
+                                satin={false}
+                                radius="full"
+                                className="h-9 w-9 flex items-center justify-center cursor-pointer"
+                                style={{ boxShadow: "none", border: "none", backgroundColor: "transparent" }}
+                            >
                                 <Search className="h-[18px] w-[18px] text-foreground/70" strokeWidth={2} />
-                            </button>
-                            <button className="h-9 w-9 rounded-full flex items-center justify-center hover:bg-black/5 transition-colors">
+                            </LiquidGlass>
+                            <LiquidGlass
+                                as="button"
+                                intensity="subtle"
+                                satin={false}
+                                radius="full"
+                                className="h-9 w-9 flex items-center justify-center cursor-pointer"
+                                style={{ boxShadow: "none", border: "none", backgroundColor: "transparent" }}
+                            >
                                 <Bell className="h-[18px] w-[18px] text-foreground/70" strokeWidth={2} />
-                            </button>
+                            </LiquidGlass>
                         </>
                     )}
                 </div>

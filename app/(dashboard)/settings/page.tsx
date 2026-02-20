@@ -116,7 +116,7 @@ export default function SettingsPage() {
         fontFamily: "var(--font-sans, system-ui, sans-serif)",
       }}
     >
-      <div style={{ flex: 1, width: "100%", maxWidth: 640, margin: "0 auto", padding: "8px 0 80px" }}>
+      <div style={{ flex: 1, width: "100%", padding: "8px 0 80px" }}>
         {SECTIONS.map((section) => (
           <div key={section.title ?? "top"} style={{ marginBottom: 24 }}>
             {section.title && (
