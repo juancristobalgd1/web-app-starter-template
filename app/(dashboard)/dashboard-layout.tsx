@@ -4,24 +4,25 @@ import type React from "react";
 import { useEffect, useState, useTransition } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { AppSidebar } from "@/components/shared/app-sidebar";
+import { Header } from "@/components/shared/header";
 import { BottomNav } from "@/components/shared/bottom-nav";
 import { AuthGuard } from "@/components/shared/auth-guard";
 
 type Tab = "panel" | "lists" | "documents" | "settings";
 
 const ROUTE_TO_TAB: Record<string, Tab> = {
-  "/panel":     "panel",
-  "/":          "panel",
-  "/lists":     "lists",
+  "/panel": "panel",
+  "/": "panel",
+  "/lists": "lists",
   "/documents": "documents",
-  "/settings":  "settings",
+  "/settings": "settings",
 };
 
 const TAB_TO_ROUTE: Record<Tab, string> = {
-  panel:     "/panel",
-  lists:     "/lists",
+  panel: "/panel",
+  lists: "/lists",
   documents: "/documents",
-  settings:  "/settings",
+  settings: "/settings",
 };
 
 export default function DashboardLayout({
@@ -29,8 +30,8 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const router    = useRouter();
-  const pathname  = usePathname();
+  const router = useRouter();
+  const pathname = usePathname();
   const [activeTab, setActiveTab] = useState<Tab>("panel");
   const [_isPending, startTransition] = useTransition();
 
@@ -48,14 +49,20 @@ export default function DashboardLayout({
 
   return (
     <AuthGuard>
-      <div className="flex h-dvh overflow-hidden bg-background">
-        {/* Sidebar – solo desktop (md+) */}
-        <AppSidebar activeTab={activeTab} onTabChange={handleTabChange} />
+      <div className="flex flex-col h-dvh overflow-hidden bg-background">
+        {/* Top Header – full width, above everything */}
+        <Header businessName="Mi App" />
 
-        {/* Contenido principal */}
-        <main className="flex-1 overflow-x-hidden overflow-y-auto scroll-momentum pb-[calc(var(--bottom-nav-height)+env(safe-area-inset-bottom))] md:pb-0">
-          {children}
-        </main>
+        {/* Body: sidebar + main content */}
+        <div className="flex flex-1 min-h-0 overflow-hidden">
+          {/* Sidebar – solo desktop (md+) */}
+          <AppSidebar activeTab={activeTab} onTabChange={handleTabChange} />
+
+          {/* Contenido principal */}
+          <main className="flex-1 overflow-x-hidden overflow-y-auto scroll-momentum pb-[calc(var(--bottom-nav-height)+env(safe-area-inset-bottom))] md:pb-0">
+            {children}
+          </main>
+        </div>
 
         {/* Bottom nav – solo mobile */}
         <BottomNav activeTab={activeTab} onTabChange={handleTabChange} />

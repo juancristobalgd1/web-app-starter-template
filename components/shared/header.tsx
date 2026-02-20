@@ -3,49 +3,35 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { LiquidGlass } from "@/components/ui/satin-liquid-glass";
 import {
     ArrowLeft,
     Search,
-    LogOut,
+    Bell,
+    ChevronDown,
     Store,
-    User,
-    Settings,
-    Bell
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 interface HeaderProps {
     title?: string;
     showBack?: boolean;
     rightActions?: React.ReactNode;
     className?: string;
+    businessName?: string;
 }
 
-export function Header({ title, showBack, rightActions, className }: HeaderProps) {
+export function Header({ title, showBack, rightActions, className, businessName = "Mi App" }: HeaderProps) {
     const router = useRouter();
-    const [showShadow, setShowShadow] = useState(false);
+    const [scrolled, setScrolled] = useState(false);
 
     useEffect(() => {
         const handleScroll = () => {
-            // Check window scroll
-            if (window.scrollY > 0) {
-                setShowShadow(true);
-                return;
-            }
-
-            // Check scroll containers (common in dashboard layouts)
             const scrollContainers = document.querySelectorAll("main, .overflow-y-auto");
-            for (const container of Array.from(scrollContainers)) {
-                if (container.scrollTop > 0) {
-                    setShowShadow(true);
-                    return;
-                }
+            let isScrolled = window.scrollY > 2;
+            for (const c of Array.from(scrollContainers)) {
+                if (c.scrollTop > 2) { isScrolled = true; break; }
             }
-
-            setShowShadow(false);
+            setScrolled(isScrolled);
         };
-
         window.addEventListener("scroll", handleScroll, { capture: true, passive: true });
         handleScroll();
         return () => window.removeEventListener("scroll", handleScroll, { capture: true });
@@ -56,69 +42,53 @@ export function Header({ title, showBack, rightActions, className }: HeaderProps
             className={cn(
                 "sticky top-0 z-[100] w-full flex-shrink-0",
                 "pt-[env(safe-area-inset-top)]",
-                "transition-all duration-300 ease-in-out",
-                showShadow ? "shadow-sm" : "",
+                "transition-all duration-300",
                 className
             )}
+            style={{
+                backgroundColor: scrolled ? "rgba(255,255,255,0.88)" : "var(--background)",
+                backdropFilter: scrolled ? "blur(16px) saturate(180%)" : "none",
+                WebkitBackdropFilter: scrolled ? "blur(16px) saturate(180%)" : "none" as any,
+                borderBottom: "1px solid rgba(0,0,0,0.06)",
+            }}
         >
-            <LiquidGlass
-                intensity={showShadow ? "medium" : "subtle"}
-                satin={showShadow}
-                radius="none"
-                disableHover
-                disableActive
-                className="w-full h-14 md:h-16 flex items-center justify-between px-4"
-                style={{
-                    border: 'none',
-                    backgroundColor: showShadow ? 'hsl(var(--background) / 0.7)' : 'transparent',
-                    backdropFilter: showShadow ? 'blur(12px) saturate(180%)' : 'none',
-                    WebkitBackdropFilter: showShadow ? 'blur(12px) saturate(180%)' : 'none',
-                }}
-            >
-                {/* Left Section */}
-                <div className="flex items-center gap-3 min-w-0">
+            <div className="w-full h-14 flex items-center justify-between px-4 md:px-5">
+                {/* Left */}
+                <div className="flex items-center gap-2 min-w-0">
                     {showBack ? (
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-9 w-9 rounded-full"
+                        <button
                             onClick={() => router.back()}
+                            className="h-9 w-9 rounded-full flex items-center justify-center hover:bg-black/5 transition-colors"
                         >
-                            <ArrowLeft className="h-5 w-5" />
-                        </Button>
+                            <ArrowLeft className="h-5 w-5 text-foreground" />
+                        </button>
                     ) : (
-                        <div className="flex items-center gap-2">
-                            <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
-                                <Store className="h-4 w-4 text-primary-foreground" />
+                        <button className="flex items-center gap-2 hover:bg-black/5 rounded-xl px-2 py-1.5 transition-colors -ml-1">
+                            <div className="w-7 h-7 rounded-full bg-primary flex items-center justify-center flex-shrink-0 shadow-sm">
+                                <Store className="h-3.5 w-3.5 text-primary-foreground" />
                             </div>
-                        </div>
-                    )}
-                    {title && (
-                        <h1 className="text-base font-semibold text-foreground truncate">
-                            {title}
-                        </h1>
+                            <span className="text-[15px] font-semibold text-foreground leading-none">
+                                {title ?? businessName}
+                            </span>
+                            <ChevronDown className="h-3.5 w-3.5 text-muted-foreground mt-px" strokeWidth={2.5} />
+                        </button>
                     )}
                 </div>
 
-                {/* Right Section */}
-                <div className="flex items-center gap-2">
-                    {rightActions ? (
-                        rightActions
-                    ) : (
+                {/* Right */}
+                <div className="flex items-center gap-0.5">
+                    {rightActions ?? (
                         <>
-                            <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full hidden md:flex">
-                                <Search className="h-5 w-5" />
-                            </Button>
-                            <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full">
-                                <Bell className="h-5 w-5" />
-                            </Button>
-                            <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center cursor-pointer hover:bg-muted/80 transition-colors ml-1">
-                                <User className="h-4 w-4 text-muted-foreground" />
-                            </div>
+                            <button className="h-9 w-9 rounded-full flex items-center justify-center hover:bg-black/5 transition-colors">
+                                <Search className="h-[18px] w-[18px] text-foreground/70" strokeWidth={2} />
+                            </button>
+                            <button className="h-9 w-9 rounded-full flex items-center justify-center hover:bg-black/5 transition-colors">
+                                <Bell className="h-[18px] w-[18px] text-foreground/70" strokeWidth={2} />
+                            </button>
                         </>
                     )}
                 </div>
-            </LiquidGlass>
+            </div>
         </header>
     );
 }

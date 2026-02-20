@@ -1,18 +1,12 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import {
-  Sidebar,
-  SidebarBody,
-} from "@/components/ui/hover-sidebar";
 import {
   LayoutDashboard,
   List,
   FileText,
   Settings,
-  Store,
 } from "lucide-react";
 
 type Tab = "panel" | "lists" | "documents" | "settings";
@@ -22,107 +16,55 @@ interface AppSidebarProps {
   onTabChange: (tab: Tab) => void;
 }
 
-const NAV_LINKS: { tab: Tab; label: string; href: string; icon: React.ReactNode; activeIcon: React.ReactNode }[] = [
-  {
-    tab: "panel",
-    label: "Panel",
-    href: "/panel",
-    icon:       <LayoutDashboard className="h-5 w-5" />,
-    activeIcon: <LayoutDashboard className="h-5 w-5 text-primary" strokeWidth={2.5} />,
-  },
-  {
-    tab: "lists",
-    label: "Listas",
-    href: "/lists",
-    icon:       <List className="h-5 w-5" />,
-    activeIcon: <List className="h-5 w-5 text-primary" strokeWidth={2.5} />,
-  },
-  {
-    tab: "documents",
-    label: "Documentos",
-    href: "/documents",
-    icon:       <FileText className="h-5 w-5" />,
-    activeIcon: <FileText className="h-5 w-5 text-primary" strokeWidth={2.5} />,
-  },
-  {
-    tab: "settings",
-    label: "Ajustes",
-    href: "/settings",
-    icon:       <Settings className="h-5 w-5" />,
-    activeIcon: <Settings className="h-5 w-5 text-primary" strokeWidth={2.5} />,
-  },
+const NAV_LINKS: { tab: Tab; label: string; href: string; icon: typeof LayoutDashboard }[] = [
+  { tab: "panel", label: "Panel", href: "/panel", icon: LayoutDashboard },
+  { tab: "lists", label: "Listas", href: "/lists", icon: List },
+  { tab: "documents", label: "Documentos", href: "/documents", icon: FileText },
+  { tab: "settings", label: "Ajustes", href: "/settings", icon: Settings },
 ];
 
 /**
- * AppSidebar – sidebar de navegación principal.
- * Solo visible en desktop (md+). En mobile se usa BottomNav.
- * Hover para expandir, collapse por defecto (icono only).
+ * AppSidebar – sidebar de navegación estilo vyyq.io.
+ * Icon-only, thin, no hover expand. Solo visible en desktop (md+).
  */
 export function AppSidebar({ activeTab, onTabChange }: AppSidebarProps) {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-
   return (
-    <div className="hidden md:block h-full">
-      <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} animate>
-        <SidebarBody className="justify-between gap-10">
-          <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
-            {/* Logo */}
-            <div className="flex items-center gap-2 px-3 py-2 mb-4">
-              <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
-                <Store className="h-4 w-4 text-primary-foreground" />
-              </div>
-              {sidebarOpen && (
-                <span className="font-semibold text-sidebar-foreground whitespace-nowrap">
-                  Mi App
-                </span>
+    <aside
+      className="hidden md:flex flex-col h-full flex-shrink-0"
+      style={{
+        width: 52,
+        borderRight: "1px solid rgba(0,0,0,0.06)",
+        backgroundColor: "var(--background)",
+      }}
+    >
+      {/* Top: nav icons */}
+      <nav className="flex flex-col items-center gap-1 pt-3 px-2">
+        {NAV_LINKS.map(({ tab, label, href, icon: Icon }) => {
+          const isActive = activeTab === tab;
+          return (
+            <Link
+              key={tab}
+              href={href}
+              title={label}
+              onClick={() => onTabChange(tab)}
+              className={cn(
+                "w-9 h-9 flex items-center justify-center rounded-xl transition-colors",
+                isActive
+                  ? "bg-primary/10 text-primary"
+                  : "text-muted-foreground hover:bg-black/5 hover:text-foreground"
               )}
-            </div>
+            >
+              <Icon
+                className="h-[18px] w-[18px]"
+                strokeWidth={isActive ? 2.5 : 2}
+              />
+            </Link>
+          );
+        })}
+      </nav>
 
-            {/* Navigation */}
-            <nav className="flex flex-col gap-1 px-2">
-              {NAV_LINKS.map((link) => {
-                const isActive = activeTab === link.tab;
-                return (
-                  <Link
-                    key={link.tab}
-                    href={link.href}
-                    onClick={() => onTabChange(link.tab)}
-                    className={cn(
-                      "flex items-center gap-2 group/sidebar py-2 px-2 rounded-lg cursor-pointer transition-colors",
-                      isActive
-                        ? "bg-sidebar-accent text-sidebar-accent-foreground"
-                        : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-                    )}
-                  >
-                    <div className="flex-shrink-0">
-                      {isActive ? link.activeIcon : link.icon}
-                    </div>
-                    {sidebarOpen && (
-                      <span className="text-sm font-medium group-hover/sidebar:translate-x-0.5 transition duration-150 whitespace-pre">
-                        {link.label}
-                      </span>
-                    )}
-                  </Link>
-                );
-              })}
-            </nav>
-          </div>
-
-          {/* Footer – perfil / logo */}
-          <div className="p-2">
-            <div className="flex items-center gap-3 cursor-pointer hover:bg-sidebar-accent rounded-lg p-2 -m-2 transition-colors">
-              <div className="w-8 h-8 rounded-full bg-primary/10 border border-border flex items-center justify-center flex-shrink-0 text-sm">
-                👤
-              </div>
-              {sidebarOpen && (
-                <span className="font-medium text-sidebar-foreground whitespace-nowrap truncate text-sm">
-                  Usuario
-                </span>
-              )}
-            </div>
-          </div>
-        </SidebarBody>
-      </Sidebar>
-    </div>
+      {/* Bottom: spacer fills */}
+      <div className="flex-1" />
+    </aside>
   );
 }
