@@ -49,22 +49,23 @@ export default function DashboardLayout({
 
   return (
     <AuthGuard>
-      <div className="flex flex-col h-dvh overflow-hidden bg-background">
-        {/* Top Header – full width, above everything */}
-        <Header businessName="Mi App" />
+      {/* Sidebar spans FULL height — header is only inside the content column */}
+      <div className="flex h-dvh overflow-hidden bg-background">
+        {/* Sidebar — full height, desktop only */}
+        <AppSidebar activeTab={activeTab} onTabChange={handleTabChange} />
 
-        {/* Body: sidebar + main content */}
-        <div className="flex flex-1 min-h-0 overflow-hidden">
-          {/* Sidebar – solo desktop (md+) */}
-          <AppSidebar activeTab={activeTab} onTabChange={handleTabChange} />
+        {/* Right column: Header + main content */}
+        <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
+          {/* Header sits only above the content, not the sidebar */}
+          <Header businessName="Mi App" />
 
-          {/* Contenido principal */}
+          {/* Main scrollable content */}
           <main className="flex-1 overflow-x-hidden overflow-y-auto scroll-momentum pb-[calc(var(--bottom-nav-height)+env(safe-area-inset-bottom))] md:pb-0">
             {children}
           </main>
         </div>
 
-        {/* Bottom nav – solo mobile */}
+        {/* Bottom nav — mobile only */}
         <BottomNav activeTab={activeTab} onTabChange={handleTabChange} />
       </div>
     </AuthGuard>
