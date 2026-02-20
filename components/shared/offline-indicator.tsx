@@ -1,6 +1,6 @@
 "use client";
 
-import { useOnlineStatus } from "@/hooks/use-online-status";
+import { useOnlineStatus } from "@/hooks/pwa/use-online-status";
 import { cn } from "@/lib/utils";
 
 /**
