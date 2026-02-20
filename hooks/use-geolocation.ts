@@ -5,7 +5,7 @@ export function useGeolocation() {
 
   const getLocation = (onSuccess: (location: string) => void) => {
     if (!navigator.geolocation) {
-      console.error("Geolocalización no soportada por el navegador");
+      console.error("Geolocation not supported by your browser");
       return;
     }
 
