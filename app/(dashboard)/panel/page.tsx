@@ -8,9 +8,9 @@ import { Plus, Star } from "lucide-react";
 export default function PanelPage() {
   return (
     <div className="flex flex-col min-h-full">
-      <PageHeader title="Panel" subtitle="Resumen general" />
+      <PageHeader title="Panel" subtitle="Resumen general" className="px-6 md:px-8" />
 
-      <div className="flex-1 p-4 space-y-4">
+      <div className="flex-1 p-8 md:p-10 space-y-4">
         {/* Tarjetas de resumen */}
         <div className="grid grid-cols-2 gap-3">
           {STAT_CARDS.map((card) => (

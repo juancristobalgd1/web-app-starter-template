@@ -7,9 +7,9 @@ import { Plus } from "lucide-react";
 export default function ListsPage() {
   return (
     <div className="flex flex-col min-h-full">
-      <PageHeader title="Listas" subtitle="Gestiona tus listas" />
+      <PageHeader title="Listas" subtitle="Gestiona tus listas" className="px-6 md:px-8" />
 
-      <div className="flex-1 p-4">
+      <div className="flex-1 p-8 md:p-10">
         {/* Filtros */}
         <div className="flex gap-2 mb-4 overflow-x-auto pb-1 no-scrollbar">
           {["Todas", "Activas", "Completadas", "Archivadas"].map((f) => (

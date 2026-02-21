@@ -57,10 +57,10 @@ export default function DashboardLayout({
         {/* Right column: Header + main content */}
         <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
           {/* Header sits only above the content, not the sidebar */}
-          <Header title="Mi App" />
+          <Header title="Mi App" containerClassName="px-12 md:px-14" />
 
           {/* Main scrollable content */}
-          <main className="flex-1 overflow-x-hidden overflow-y-auto scroll-momentum pb-[calc(var(--bottom-nav-height)+env(safe-area-inset-bottom))] md:pb-0">
+          <main className="flex-1 overflow-x-hidden overflow-y-auto scroll-momentum px-12 py-5 md:px-14 md:py-6 pb-[calc(var(--bottom-nav-height)+env(safe-area-inset-bottom))] md:pb-6">
             {children}
           </main>
         </div>

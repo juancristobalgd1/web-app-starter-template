@@ -7,9 +7,9 @@ import { FileText, Plus } from "lucide-react";
 export default function DocumentsPage() {
   return (
     <div className="flex flex-col min-h-full">
-      <PageHeader title="Documentos" subtitle="Facturas, presupuestos y más" />
+      <PageHeader title="Documentos" subtitle="Facturas, presupuestos y más" className="px-6 md:px-8" />
 
-      <div className="flex-1 p-4">
+      <div className="flex-1 p-8 md:p-10">
         {/* Tabs de tipo */}
         <div className="flex gap-1 mb-4 bg-muted p-1 rounded-xl">
           {["Todos", "Facturas", "Presupuestos", "Pedidos"].map((tab, i) => (
