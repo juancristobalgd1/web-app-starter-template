@@ -1,202 +1,202 @@
 "use client";
 
 import * as React from "react";
-import { Plus } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Plus, X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useLiquidGlass } from "@/components/ui/satin-liquid-glass";
 
 export interface FabMenuItem {
-    icon: React.ReactNode;
-    label: string;
-    onClick: () => void;
+  icon: React.ReactNode;
+  label: string;
+  onClick: () => void;
 }
 
 interface AnimatedFabProps {
-    items: FabMenuItem[];
-    className?: string;
-    ariaLabel?: string;
-    /** Custom color class for the main FAB button (e.g., "bg-blue-600 hover:bg-blue-700") */
-    fabColorClass?: string;
-    /** Controlled mode: external open state */
-    isOpen?: boolean;
-    /** Controlled mode: callback when open state should change */
-    onOpenChange?: (isOpen: boolean) => void;
+  items: FabMenuItem[];
+  className?: string;
+  ariaLabel?: string;
+  fabColorClass?: string;
+  isOpen?: boolean;
+  onOpenChange?: (isOpen: boolean) => void;
 }
 
-/**
- * Animated Floating Action Button with expandable menu.
- * Items animate in/out with staggered timing for a premium feel.
- * 
- * Can be used in two modes:
- * - Uncontrolled (default): manages its own open state
- * - Controlled: pass isOpen and onOpenChange props
- */
+const CIRCLE_SIZE = 56;   // px – icon circle diameter
+const FAB_SIZE = 56;   // px – main FAB diameter
+const ROW_GAP = 20;   // px – gap between item rows
+const FAB_GAP = 28;   // px – gap between last item and main FAB
+
 export function AnimatedFab({
-    items,
-    className,
-    ariaLabel = "Menú de acciones",
-    fabColorClass,
-    isOpen: controlledIsOpen,
-    onOpenChange
+  items,
+  className,
+  ariaLabel = "Menú de acciones",
+  isOpen: controlledIsOpen,
+  onOpenChange,
 }: AnimatedFabProps) {
-    const [internalIsOpen, setInternalIsOpen] = React.useState(false);
-    const [isClosing, setIsClosing] = React.useState(false);
-    const fabButtonRef = React.useRef<HTMLButtonElement>(null);
+  const [internalIsOpen, setInternalIsOpen] = React.useState(false);
+  const [isClosing, setIsClosing] = React.useState(false);
+  const fabButtonRef = React.useRef<HTMLButtonElement>(null);
 
-    // Determine if we're in controlled or uncontrolled mode
-    const isControlled = controlledIsOpen !== undefined;
-    const isOpen = isControlled ? controlledIsOpen : internalIsOpen;
+  const isControlled = controlledIsOpen !== undefined;
+  const isOpen = isControlled ? controlledIsOpen : internalIsOpen;
 
-    // Get liquid glass styles
-    const { style: glassStyle } = useLiquidGlass({ intensity: "medium", satin: true });
-    const { style: subtleGlassStyle } = useLiquidGlass({ intensity: "subtle", satin: false });
-    const { style: primaryGlassStyle } = useLiquidGlass({ intensity: "strong", variant: "primary" });
+  const setIsOpen = React.useCallback(
+    (v: boolean) => { if (isControlled) onOpenChange?.(v); else setInternalIsOpen(v); },
+    [isControlled, onOpenChange]
+  );
 
-    const setIsOpen = React.useCallback((value: boolean) => {
-        if (isControlled) {
-            onOpenChange?.(value);
-        } else {
-            setInternalIsOpen(value);
-        }
-    }, [isControlled, onOpenChange]);
+  const handleClose = React.useCallback(() => {
+    setIsClosing(true);
+    setTimeout(() => { setIsOpen(false); setIsClosing(false); }, 280);
+  }, [setIsOpen]);
 
-    const handleClose = React.useCallback(() => {
-        setIsClosing(true);
-        // Trigger bounce animation on the FAB button
-        if (fabButtonRef.current) {
-            fabButtonRef.current.classList.add('animate-fab-bounce');
-        }
-        setTimeout(() => {
-            setIsOpen(false);
-            setIsClosing(false);
-            if (fabButtonRef.current) {
-                fabButtonRef.current.classList.remove('animate-fab-bounce');
-            }
-        }, 300);
-    }, [setIsOpen]);
+  const handleItemClick = (onClick: () => void) => {
+    handleClose();
+    setTimeout(onClick, 140);
+  };
 
-    const handleItemClick = (onClick: () => void) => {
-        handleClose();
-        setTimeout(() => onClick(), 150);
-    };
+  const handleToggle = () => (isOpen ? handleClose() : setIsOpen(true));
 
-    const handleToggle = () => {
-        if (isOpen) {
-            handleClose();
-        } else {
-            setIsOpen(true);
-        }
-    };
+  const visible = isOpen && !isClosing;
 
-    return (
+  return (
+    <div
+      className={cn("fixed z-50 flex flex-col items-end pointer-events-none", className)}
+      style={{ right: 20, bottom: 88 }}
+    >
+      {/* Backdrop */}
+      {(isOpen || isClosing) && (
         <div
-            className={cn("fixed z-50 flex flex-col items-end pointer-events-none", className)}
-            style={{ right: '1.5rem', bottom: '6rem' }}
-        >
-            {/* Backdrop */}
-            {(isOpen || isClosing) && (
-                <div
-                    className={cn(
-                        "fixed inset-0 z-10 bg-black/20 backdrop-blur-[2px] pointer-events-auto",
-                        isClosing ? "animate-fade-out" : "animate-fade-in"
-                    )}
-                    onClick={handleClose}
-                    style={{
-                        animationDuration: '0.2s',
-                        opacity: isClosing ? 0 : undefined
-                    }}
-                />
-            )}
+          className="fixed inset-0 z-10 pointer-events-auto"
+          style={{
+            background: "rgba(0,0,0,0.14)",
+            backdropFilter: "blur(2px)",
+            WebkitBackdropFilter: "blur(2px)",
+            opacity: isClosing ? 0 : 1,
+            transition: "opacity 0.22s ease",
+          }}
+          onClick={handleClose}
+        />
+      )}
 
-            {/* FAB Menu Items */}
+      {/* ── Menu items ────────────────────────────────────── */}
+      <div
+        className="z-20"
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "flex-end",
+          rowGap: ROW_GAP,              // ← explicit pixel gap between rows
+          marginBottom: FAB_GAP,        // ← explicit pixel gap before FAB
+          pointerEvents: visible ? "auto" : "none",
+        }}
+        role="menu"
+      >
+        {items.map((item, index) => {
+          const delay = visible
+            ? `${(items.length - 1 - index) * 55}ms`
+            : `${index * 30}ms`;
+
+          return (
             <div
-                className={cn(
-                    "flex flex-col items-end space-y-4 mb-5 z-20",
-                    isOpen ? "pointer-events-auto" : "pointer-events-none"
-                )}
-                role="menu"
-                aria-label="Opciones de acciones"
+              key={index}
+              role="menuitem"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 12,
+                opacity: visible ? 1 : 0,
+                transform: visible ? "translateY(0) scale(1)" : "translateY(12px) scale(0.92)",
+                transition: "opacity 0.22s ease, transform 0.22s cubic-bezier(0.34,1.56,0.64,1)",
+                transitionDelay: delay,
+              }}
             >
-                {items.map((item, index) => (
-                    <div
-                        key={index}
-                        className={cn(
-                            "flex items-center gap-3",
-                            isOpen && !isClosing
-                                ? "opacity-100 translate-y-0 scale-100"
-                                : "opacity-0 translate-y-2 scale-95 pointer-events-none"
-                        )}
-                        style={{
-                            transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
-                            transitionDelay: isOpen && !isClosing
-                                ? `${(items.length - 1 - index) * 50}ms`
-                                : `${(items.length - 1 - index) * 40}ms`,
-                        }}
-                        role="menuitem"
-                    >
-                        {/* Label - tamaño mejorado para accesibilidad */}
-                        <span
-                            className={cn(
-                                "text-sm font-medium px-4 py-2.5 rounded-xl text-foreground",
-                                "min-w-[120px] text-right",
-                                isOpen && !isClosing ? "opacity-100 translate-x-0" : "opacity-0 translate-x-2"
-                            )}
-                            style={{
-                                ...subtleGlassStyle,
-                                transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
-                                transitionDelay: isOpen && !isClosing
-                                    ? `${(items.length - 1 - index) * 50 + 30}ms`
-                                    : `${(items.length - 1 - index) * 30}ms`,
-                            }}
-                            id={`fab-label-${index}`}
-                        >
-                            {item.label}
-                        </span>
-
-                        {/* Button - touch target mínimo 44x44 (WCAG) */}
-                        <Button
-                            className={cn(
-                                "rounded-full w-14 h-14 min-w-[44px] min-h-[44px] text-foreground",
-                                "transition-all duration-200 hover:scale-105 active:scale-95",
-                                "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-                                "bg-transparent hover:bg-transparent border-0"
-                            )}
-                            style={{ ...glassStyle, boxShadow: 'none' }}
-                            onClick={() => handleItemClick(item.onClick)}
-                            aria-labelledby={`fab-label-${index}`}
-                        >
-                            {item.icon}
-                        </Button>
-                    </div>
-                ))}
-            </div>
-
-            {/* Main FAB Button */}
-            <Button
-                ref={fabButtonRef}
-                className={cn(
-                    "floating-action-button fab-scroll-aware w-16 h-16 z-20 pointer-events-auto",
-                    "bg-transparent hover:bg-transparent border-0 text-primary-foreground",
-                    "transition-all duration-200 hover:scale-105 active:scale-95",
-                    fabColorClass
-                )}
+              {/* Label pill */}
+              <button
+                onClick={() => handleItemClick(item.onClick)}
+                aria-label={item.label}
                 style={{
-                    ...primaryGlassStyle,
-                    boxShadow: 'none',
-                    borderRadius: '9999px',
+                  height: CIRCLE_SIZE,
+                  minWidth: 180,
+                  paddingLeft: 20,
+                  paddingRight: 20,
+                  borderRadius: 16,
+                  border: "none",
+                  cursor: "pointer",
+                  backgroundColor: "rgba(230,230,235,0.95)",
+                  backdropFilter: "blur(10px)",
+                  WebkitBackdropFilter: "blur(10px)",
+                  boxShadow: "0 2px 14px rgba(0,0,0,0.10)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "flex-end",
+                  fontSize: 15,
+                  fontWeight: 500,
+                  color: "#1a2035",
+                  whiteSpace: "nowrap",
                 }}
-                aria-label={ariaLabel}
-                aria-expanded={isOpen}
-                onClick={handleToggle}
-            >
-                <Plus
-                    className={cn(
-                        "h-7 w-7 transition-transform duration-300 ease-out",
-                        isOpen && !isClosing && "rotate-45"
-                    )}
-                />
-            </Button>
-        </div>
-    );
+              >
+                {item.label}
+              </button>
+
+              {/* Icon circle */}
+              <button
+                onClick={() => handleItemClick(item.onClick)}
+                aria-label={item.label}
+                style={{
+                  width: CIRCLE_SIZE,
+                  height: CIRCLE_SIZE,
+                  borderRadius: "50%",
+                  border: "none",
+                  cursor: "pointer",
+                  backgroundColor: "rgba(230,230,235,0.95)",
+                  backdropFilter: "blur(10px)",
+                  WebkitBackdropFilter: "blur(10px)",
+                  boxShadow: "0 2px 14px rgba(0,0,0,0.10)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "#1a2035",
+                  flexShrink: 0,
+                  transition: "transform 0.15s ease",
+                }}
+                onMouseEnter={e => (e.currentTarget.style.transform = "scale(1.06)")}
+                onMouseLeave={e => (e.currentTarget.style.transform = "scale(1)")}
+              >
+                {item.icon}
+              </button>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* ── Main FAB ──────────────────────────────────────── */}
+      <button
+        ref={fabButtonRef}
+        className="fab-scroll-aware z-20 pointer-events-auto"
+        aria-label={ariaLabel}
+        aria-expanded={isOpen}
+        onClick={handleToggle}
+        style={{
+          width: FAB_SIZE,
+          height: FAB_SIZE,
+          borderRadius: "50%",
+          border: "none",
+          cursor: "pointer",
+          backgroundColor: "var(--primary)",
+          boxShadow: "0 4px 18px rgba(0,0,0,0.22)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          color: "#ffffff",
+          transition: "transform 0.15s ease, box-shadow 0.15s ease",
+        }}
+        onMouseEnter={e => (e.currentTarget.style.transform = "scale(1.06)")}
+        onMouseLeave={e => (e.currentTarget.style.transform = "scale(1)")}
+      >
+        {visible
+          ? <X className="h-6 w-6" style={{ color: "#fff" }} />
+          : <Plus className="h-6 w-6" style={{ color: "#fff" }} />
+        }
+      </button>
+    </div>
+  );
 }
