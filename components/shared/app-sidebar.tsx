@@ -43,12 +43,6 @@ export function AppSidebar({ activeTab, onTabChange }: AppSidebarProps) {
   const [sidebarBusinessName, setSidebarBusinessName] = useState<string | null>(null);
   const [aiOpen, setAiOpen] = useState(false);
 
-  const openAi = useCallback(() => {
-    hapticTap();
-    setAiOpen(true);
-  }, []);
-  const closeAi = useCallback(() => setAiOpen(false), []);
-
   useEffect(() => {
     try {
       const raw = getLocalStorageItem("businessProfile");
@@ -103,8 +97,8 @@ export function AppSidebar({ activeTab, onTabChange }: AppSidebarProps) {
       {
         tab: "documents",
         label: t("documents.title"),
-        href: "/documentos",
-        icon: pathname === "/documentos" ? <FileText className="h-5 w-5 text-primary" /> : <FileText className="h-5 w-5" />,
+        href: "/documents",
+        icon: pathname === "/documents" ? <FileText className="h-5 w-5 text-primary" /> : <FileText className="h-5 w-5" />,
       },
       {
         tab: "settings",

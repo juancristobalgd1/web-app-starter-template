@@ -27,7 +27,7 @@ export function RegisterForm({ onLogin }: RegisterFormProps) {
     setIsLoading(true);
     try {
       await signUp(email, password, name);
-      router.push("/dashboard");
+      router.push("/panel");
     } catch (error) {
       console.error("Register error:", error);
     } finally {

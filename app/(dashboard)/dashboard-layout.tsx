@@ -4,7 +4,6 @@ import type React from "react";
 import { useEffect, useState, useTransition } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { AppSidebar } from "@/components/shared/app-sidebar";
-import { Header } from "@/components/shared/header";
 import { BottomNav } from "@/components/shared/bottom-nav";
 import { AuthGuard } from "@/components/shared/auth-guard";
 
@@ -49,23 +48,15 @@ export default function DashboardLayout({
 
   return (
     <AuthGuard>
-      {/* Sidebar spans FULL height — header is only inside the content column */}
       <div className="flex h-dvh overflow-hidden bg-background">
-        {/* Sidebar — full height, desktop only */}
         <AppSidebar activeTab={activeTab} onTabChange={handleTabChange} />
 
-        {/* Right column: Header + main content */}
         <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
-          {/* Header sits only above the content, not the sidebar */}
-          <Header title="Mi App" containerClassName="px-12 md:px-14" />
-
-          {/* Main scrollable content */}
           <main className="flex-1 overflow-x-hidden overflow-y-auto scroll-momentum px-12 py-5 md:px-14 md:py-6 pb-[calc(var(--bottom-nav-height)+env(safe-area-inset-bottom))] md:pb-6">
             {children}
           </main>
         </div>
 
-        {/* Bottom nav — mobile only */}
         <BottomNav activeTab={activeTab} onTabChange={handleTabChange} />
       </div>
     </AuthGuard>

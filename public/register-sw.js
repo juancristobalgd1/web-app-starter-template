@@ -12,9 +12,9 @@
   );
 
   window.addEventListener("load", () => {
-    isLocalhost ? checkValidSW("/sw.js") : registerSW("/sw.js");
+    if (isLocalhost) return;
+    registerSW("/sw.js");
 
-    // Mensajes del SW
     navigator.serviceWorker.addEventListener("message", (event) => {
       if (event.data?.type === "SYNC_COMPLETE") {
         document.dispatchEvent(new CustomEvent("backgroundSyncComplete", { detail: event.data }));

@@ -27,7 +27,7 @@ export function LoginForm({ onRegister, onForgotPassword }: LoginFormProps) {
     setIsLoading(true);
     try {
       await signIn(email, password);
-      router.push("/dashboard");
+      router.push("/panel");
     } catch (error) {
       console.error("Login error:", error);
     } finally {
