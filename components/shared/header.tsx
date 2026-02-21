@@ -338,37 +338,53 @@ export const Header: React.FC<HeaderProps> = ({
                                     </span>
                                 </div>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="w-56">
+                            <DropdownMenuContent
+                                align="end"
+                                className="w-80 p-0 border-none bg-transparent shadow-none"
+                                sideOffset={8}
+                                style={{
+                                    ...subtleGlassStyle,
+                                    padding: "16px",
+                                    borderRadius: "20px",
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    gap: "4px"
+                                }}
+                            >
                                 {user ? (
                                     <>
-                                        <DropdownMenuLabel className="font-normal">
-                                            <div className="flex flex-col space-y-1">
-                                                <p className="text-sm font-medium leading-none text-foreground">
-                                                    {profile?.name || "Mi Cuenta"}
-                                                </p>
-                                                <p className="text-xs leading-none text-muted-foreground">
-                                                    {profile?.email || user.email}
-                                                </p>
-                                            </div>
-                                        </DropdownMenuLabel>
-                                        <DropdownMenuSeparator />
-                                        <div className="flex items-center justify-between px-2 py-1.5">
-                                            <span className="text-sm font-medium text-foreground">Modo</span>
-                                            <ToggleTheme className="border-none bg-transparent" />
+                                        <div className="px-2 pb-3 pt-1">
+                                            <p className="text-base font-bold text-foreground tracking-tight">
+                                                {profile?.name || "Mi Cuenta"}
+                                            </p>
+                                            <p className="text-sm text-muted-foreground/80 mt-1 truncate font-medium">
+                                                {profile?.email || user.email}
+                                            </p>
                                         </div>
-                                        <DropdownMenuSeparator />
-                                        <DropdownMenuItem
-                                            onClick={handleSignOut}
-                                            className="cursor-pointer text-red-600 hover:!bg-red-100 hover:!text-red-700 focus:!bg-red-100 focus:!text-red-700 dark:text-red-500 dark:hover:!bg-red-700 dark:hover:!text-red-100 dark:focus:!bg-red-700 dark:focus:!text-red-100"
-                                        >
-                                            <LogOut className="mr-2 h-4 w-4" />
-                                            <span>Cerrar sesión</span>
-                                        </DropdownMenuItem>
+
+                                        <div className="h-px w-full bg-border/40 my-1" />
+
+                                        <div className="flex flex-col gap-1 mt-1">
+                                            <div className="flex items-center justify-between px-3 py-3 rounded-xl hover:bg-muted/50 transition-all duration-200 cursor-pointer group active:scale-[0.98]">
+                                                <span className="text-sm font-semibold text-foreground/90 group-hover:text-foreground transition-colors">Apariencia</span>
+                                                <div className="flex items-center">
+                                                    <ToggleTheme className="flex-row w-auto h-9 border-none bg-transparent hover:bg-transparent shadow-none" />
+                                                </div>
+                                            </div>
+
+                                            <DropdownMenuItem
+                                                onClick={handleSignOut}
+                                                className="cursor-pointer text-red-600 hover:!bg-red-500/10 hover:!text-red-700 focus:!bg-red-500/10 focus:!text-red-700 dark:text-red-400 dark:hover:!bg-red-900/20 dark:hover:!text-red-300 dark:focus:!bg-red-900/20 dark:focus:!text-red-300 px-3 py-3 rounded-xl transition-all duration-200 active:scale-[0.98] mt-1"
+                                            >
+                                                <LogOut className="mr-3 h-4 w-4 stroke-[2.5]" />
+                                                <span className="font-semibold">Cerrar sesión</span>
+                                            </DropdownMenuItem>
+                                        </div>
                                     </>
                                 ) : (
                                     <DropdownMenuItem
                                         onClick={() => router.push("/auth")}
-                                        className="cursor-pointer"
+                                        className="cursor-pointer px-3 py-3 rounded-xl font-medium"
                                     >
                                         <span>Iniciar sesión</span>
                                     </DropdownMenuItem>
