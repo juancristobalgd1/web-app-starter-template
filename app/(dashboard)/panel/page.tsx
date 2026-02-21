@@ -1,14 +1,14 @@
 "use client";
 
-import { PageHeader } from "@/components/shared/page-header";
-import { AnimatedFab } from "@/components/ui/animated-fab";
+import { Header } from "@/components/shared/header";
+ import { AnimatedFab } from "@/components/ui/animated-fab";
 import { GlassCard } from "@/components/ui/satin-liquid-glass_legacy";
 import { Plus, Star } from "lucide-react";
 
 export default function PanelPage() {
   return (
     <div className="flex flex-col min-h-full">
-      <PageHeader title="Panel" subtitle="Resumen general" className="px-6 md:px-8" />
+      <Header title="Panel"  className="px-6 md:px-8" />
 
       <div className="flex-1 p-8 md:p-10 space-y-4">
         {/* Tarjetas de resumen */}

@@ -22,6 +22,7 @@ import {
   ShoppingCart,
   Truck,
 } from "lucide-react";
+import { Header } from "@/components/shared/header";
 
 // Fixed palette: render correctly regardless of Tailwind JIT
 const COLOR_CONFIG = {
@@ -59,94 +60,217 @@ const SECTIONS: Section[] = [
   {
     title: "Empresa",
     items: [
-      { icon: CreditCard, label: "Suscripción", sublabel: "Gestionar plan y facturación", color: "emerald" },
-      { icon: Users, label: "Perfil", sublabel: "Gestionar datos de la empresa", color: "blue" },
-      { icon: Users, label: "Equipo", sublabel: "Gestionar miembros y permisos", color: "indigo" },
-      { icon: Percent, label: "Impuestos", sublabel: "IVA 21% (21%)", color: "green" },
-      { icon: Wallet, label: "Moneda", sublabel: "Euro (EUR) €", color: "amber" },
+      {
+        icon: CreditCard,
+        label: "Suscripción",
+        sublabel: "Gestionar plan y facturación",
+        color: "emerald",
+      },
+      {
+        icon: Users,
+        label: "Perfil",
+        sublabel: "Gestionar datos de la empresa",
+        color: "blue",
+      },
+      {
+        icon: Users,
+        label: "Equipo",
+        sublabel: "Gestionar miembros y permisos",
+        color: "indigo",
+      },
+      {
+        icon: Percent,
+        label: "Impuestos",
+        sublabel: "IVA 21% (21%)",
+        color: "green",
+      },
+      {
+        icon: Wallet,
+        label: "Moneda",
+        sublabel: "Euro (EUR) €",
+        color: "amber",
+      },
     ],
   },
   {
     title: "Ventas & CRM",
     items: [
-      { icon: MessageSquare, label: "Comunicación", sublabel: "Configurar plantillas de email, SMS y WhatsApp", color: "purple" },
-      { icon: Hash, label: "Prefijos", sublabel: "Configura la numeración para documentos", color: "pink" },
-      { icon: CreditCard, label: "Pasarela de pagos", sublabel: "Cómo pagan tus clientes", color: "indigo" },
+      {
+        icon: MessageSquare,
+        label: "Comunicación",
+        sublabel: "Configurar plantillas de email, SMS y WhatsApp",
+        color: "purple",
+      },
+      {
+        icon: Hash,
+        label: "Prefijos",
+        sublabel: "Configura la numeración para documentos",
+        color: "pink",
+      },
+      {
+        icon: CreditCard,
+        label: "Pasarela de pagos",
+        sublabel: "Cómo pagan tus clientes",
+        color: "indigo",
+      },
     ],
   },
   {
     title: "App y Preferencias",
     items: [
       { icon: Globe, label: "Idioma", sublabel: "Idioma", color: "sky" },
-      { icon: Palette, label: "Tema y Apariencia", sublabel: "Claro", color: "purple" },
-      { icon: Bell, label: "Notificaciones", sublabel: "Activadas", color: "orange" },
+      {
+        icon: Palette,
+        label: "Tema y Apariencia",
+        sublabel: "Claro",
+        color: "purple",
+      },
+      {
+        icon: Bell,
+        label: "Notificaciones",
+        sublabel: "Activadas",
+        color: "orange",
+      },
     ],
   },
   {
     title: "Datos",
     items: [
-      { icon: Cloud, label: "Copia de seguridad y restauración", sublabel: "Copia de seguridad y restauración", color: "teal" },
-      { icon: RefreshCcw, label: "Restablecer a configuración predeterminada", sublabel: "Restablecer todos los valores", color: "blue" },
+      {
+        icon: Cloud,
+        label: "Copia de seguridad y restauración",
+        sublabel: "Copia de seguridad y restauración",
+        color: "teal",
+      },
+      {
+        icon: RefreshCcw,
+        label: "Restablecer a configuración predeterminada",
+        sublabel: "Restablecer todos los valores",
+        color: "blue",
+      },
     ],
   },
   {
     title: "Soporte",
     items: [
-      { icon: Star, label: "Valorar app", sublabel: "Deja tu valoración", color: "amber" },
-      { icon: Send, label: "Enviar feedback", sublabel: "Sugerencias y problemas", color: "indigo" },
+      {
+        icon: Star,
+        label: "Valorar app",
+        sublabel: "Deja tu valoración",
+        color: "amber",
+      },
+      {
+        icon: Send,
+        label: "Enviar feedback",
+        sublabel: "Sugerencias y problemas",
+        color: "indigo",
+      },
     ],
   },
   {
     title: "Cuenta",
     items: [
-      { icon: Trash2, label: "Eliminar cuenta", sublabel: "Eliminar permanentemente todos tus datos", color: "red", danger: true },
+      {
+        icon: Trash2,
+        label: "Eliminar cuenta",
+        sublabel: "Eliminar permanentemente todos tus datos",
+        color: "red",
+        danger: true,
+      },
     ],
   },
 ];
 
 export default function SettingsPage() {
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        minHeight: "100%",
-        backgroundColor: "var(--background)",
-        color: "var(--foreground)",
-        fontFamily: "var(--font-sans, system-ui, sans-serif)",
-      }}
-    >
-      <div style={{ flex: 1, width: "100%", padding: "8px 0 80px" }}>
-        {SECTIONS.map((section) => (
-          <div key={section.title ?? "top"} style={{ marginBottom: 24 }}>
-            {section.title && (
-              <div
-                style={{
-                  fontSize: 12,
-                  fontWeight: 600,
-                  letterSpacing: "0.6px",
-                  textTransform: "uppercase",
-                  color: "var(--muted-foreground)",
-                  opacity: 0.6,
-                  padding: "0 16px",
-                  marginBottom: 4,
-                  marginTop: 8,
-                }}
-              >
-                {section.title}
-              </div>
-            )}
-            {section.items.map((item) => (
-              <SettingsRow key={item.label} {...item} />
-            ))}
-          </div>
-        ))}
+    <>
+      <Header title="Configuración" className="px-6 md:px-8" />
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          minHeight: "100%",
+          backgroundColor: "var(--background)",
+          color: "var(--foreground)",
+          fontFamily: "var(--font-sans, system-ui, sans-serif)",
+        }}
+      >
+        <div style={{ flex: 1, width: "100%", padding: "8px 0 80px" }}>
+          {SECTIONS.map((section) => (
+            <div key={section.title ?? "top"} style={{ marginBottom: 24 }}>
+              {section.title && (
+                <div
+                  style={{
+                    fontSize: 12,
+                    fontWeight: 600,
+                    letterSpacing: "0.6px",
+                    textTransform: "uppercase",
+                    color: "var(--muted-foreground)",
+                    opacity: 0.6,
+                    padding: "0 16px",
+                    marginBottom: 4,
+                    marginTop: 8,
+                  }}
+                >
+                  {section.title}
+                </div>
+              )}
+              {section.items.map((item) => (
+                <SettingsRow key={item.label} {...item} />
+              ))}
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
+
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          minHeight: "100%",
+          backgroundColor: "var(--background)",
+          color: "var(--foreground)",
+          fontFamily: "var(--font-sans, system-ui, sans-serif)",
+        }}
+      >
+        <div style={{ flex: 1, width: "100%", padding: "8px 0 80px" }}>
+          {SECTIONS.map((section) => (
+            <div key={section.title ?? "top"} style={{ marginBottom: 24 }}>
+              {section.title && (
+                <div
+                  style={{
+                    fontSize: 12,
+                    fontWeight: 600,
+                    letterSpacing: "0.6px",
+                    textTransform: "uppercase",
+                    color: "var(--muted-foreground)",
+                    opacity: 0.6,
+                    padding: "0 16px",
+                    marginBottom: 4,
+                    marginTop: 8,
+                  }}
+                >
+                  {section.title}
+                </div>
+              )}
+              {section.items.map((item) => (
+                <SettingsRow key={item.label} {...item} />
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+    </>
   );
 }
 
-function SettingsRow({ icon: Icon, label, sublabel, color, danger = false }: SettingsItemData) {
+function SettingsRow({
+  icon: Icon,
+  label,
+  sublabel,
+  color,
+  danger = false,
+}: SettingsItemData) {
   const cfg = COLOR_CONFIG[color];
   return (
     <button
@@ -162,8 +286,13 @@ function SettingsRow({ icon: Icon, label, sublabel, color, danger = false }: Set
         borderRadius: 12,
         transition: "background 0.15s",
       }}
-      onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.background = "rgba(128,128,128,0.06)"; }}
-      onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.background = "transparent"; }}
+      onMouseEnter={(e) => {
+        (e.currentTarget as HTMLButtonElement).style.background =
+          "rgba(128,128,128,0.06)";
+      }}
+      onMouseLeave={(e) => {
+        (e.currentTarget as HTMLButtonElement).style.background = "transparent";
+      }}
     >
       {/* Icon circle */}
       <div
@@ -182,7 +311,16 @@ function SettingsRow({ icon: Icon, label, sublabel, color, danger = false }: Set
       </div>
 
       {/* Label + sublabel */}
-      <div style={{ display: "flex", flexDirection: "column", gap: 1, marginLeft: 14, flex: 1, minWidth: 0 }}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 1,
+          marginLeft: 14,
+          flex: 1,
+          minWidth: 0,
+        }}
+      >
         <span
           style={{
             fontSize: 14,

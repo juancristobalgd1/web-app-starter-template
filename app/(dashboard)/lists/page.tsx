@@ -1,13 +1,13 @@
 "use client";
 
-import { PageHeader } from "@/components/shared/page-header";
+import { Header } from "@/components/shared/header";
 import { AnimatedFab } from "@/components/ui/animated-fab";
 import { Plus } from "lucide-react";
 
 export default function ListsPage() {
   return (
     <div className="flex flex-col min-h-full">
-      <PageHeader title="Listas" subtitle="Gestiona tus listas" className="px-6 md:px-8" />
+      <Header title="Listas"  className="px-6 md:px-8" />
 
       <div className="flex-1 p-8 md:p-10">
         {/* Filtros */}

@@ -22,7 +22,7 @@ import { Store } from "lucide-react";
 import Image from "next/image";
 
 import { Skeleton } from "../ui/skeleton";
-import { useLiquidGlass } from "../ui/satin-liquid-glass";
+import { useLiquidGlass } from "../ui/satin-liquid-glass_legacy";
 import { ToggleTheme } from "../ui/toggle-theme";
 import { useCurrentUserProfile } from "../../hooks/use-current-user-profile";
 
@@ -160,11 +160,10 @@ export const Header: React.FC<HeaderProps> = ({
         }
     };
 
-    const scrollGlassStyle: React.CSSProperties = {
-        backgroundColor: isDark ? "rgba(30, 30, 32, 0.7)" : "rgba(255, 255, 255, 0.4)",
-        backdropFilter: "blur(20px) saturate(180%)",
-        WebkitBackdropFilter: "blur(20px) saturate(180%)",
-        boxShadow: showShadow ? "0 4px 12px rgba(0, 0, 0, 0.05)" : "none",
+    const scrollGlassStyle: React.CSSProperties = showShadow ? subtleGlassStyle : {
+        backgroundColor: "transparent",
+        boxShadow: "none",
+        borderBottom: "none",
     };
 
     return (
@@ -177,7 +176,7 @@ export const Header: React.FC<HeaderProps> = ({
             )}
             style={scrollGlassStyle}
         >
-            <div className={cn("flex w-full min-w-0 max-w-full items-center justify-between gap-2 px-3 py-2", containerClassName)}>
+            <div className={cn("flex w-full min-w-0 max-w-full items-center justify-between gap-2 px-4 h-[var(--navbar-height)]", containerClassName)}>
                 <div className="flex min-w-0 flex-1 items-center">
                     {onBack && (
                         <Button
