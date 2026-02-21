@@ -160,7 +160,14 @@ export const Header: React.FC<HeaderProps> = ({
         }
     };
 
-    const scrollGlassStyle: React.CSSProperties = showShadow ? subtleGlassStyle : {
+    // CRITICAL: This style behavior must not be changed.
+    // - Default: Transparent background, no shadow, no border.
+    // - On Scroll: Satin glass effect (legacy), NO extra black borders, NO custom shadows.
+    // The visual consistency with the BottomNav (mobile) and Sidebar (desktop) is paramount.
+    const scrollGlassStyle: React.CSSProperties = showShadow ? {
+        ...subtleGlassStyle,
+        border: "none",
+    } : {
         backgroundColor: "transparent",
         boxShadow: "none",
         borderBottom: "none",
