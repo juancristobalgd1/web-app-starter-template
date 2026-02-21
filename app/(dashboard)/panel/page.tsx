@@ -3,12 +3,28 @@
 import { Header } from "@/components/shared/header";
  import { AnimatedFab } from "@/components/ui/animated-fab";
 import { GlassCard } from "@/components/ui/satin-liquid-glass_legacy";
-import { Plus, Star } from "lucide-react";
+import { Plus, Star, Search, Bell } from "lucide-react";
 
 export default function PanelPage() {
   return (
     <div className="flex flex-col min-h-full">
-      <Header title="Panel"  className="px-6 md:px-8" />
+      <Header
+        title="Panel"
+        className="px-6 md:px-8"
+        rightActions={[
+          {
+            icon: <Search className="w-5 h-5" />,
+            onClick: () => console.log("Buscar"),
+            ariaLabel: "Buscar",
+          },
+          {
+            icon: <Bell className="w-5 h-5" />,
+            onClick: () => console.log("Notificaciones"),
+            ariaLabel: "Notificaciones",
+            badge: 62,
+          },
+        ]}
+      />
 
       <div className="flex-1 p-8 md:p-10 space-y-4">
         {/* Tarjetas de resumen */}
