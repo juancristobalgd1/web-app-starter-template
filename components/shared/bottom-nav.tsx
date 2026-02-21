@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { LiquidGlass } from "@/components/ui/satin-liquid-glass";
+import { LiquidGlass } from "@/components/ui/satin-liquid-glass_legacy";
 import {
   LayoutDashboard,
   List,
@@ -16,27 +16,27 @@ const NAV_ITEMS: {
   label: string;
   icon: (active: boolean) => React.ReactNode;
 }[] = [
-  {
-    tab: "panel",
-    label: "Panel",
-    icon: (a) => <LayoutDashboard className={cn("h-5 w-5 mb-1", a ? "text-primary" : "text-muted-foreground")} strokeWidth={a ? 2.5 : 2} />,
-  },
-  {
-    tab: "lists",
-    label: "Listas",
-    icon: (a) => <List className={cn("h-5 w-5 mb-1", a ? "text-primary" : "text-muted-foreground")} strokeWidth={a ? 2.5 : 2} />,
-  },
-  {
-    tab: "documents",
-    label: "Docs",
-    icon: (a) => <FileText className={cn("h-5 w-5 mb-1", a ? "text-primary" : "text-muted-foreground")} strokeWidth={a ? 2.5 : 2} />,
-  },
-  {
-    tab: "settings",
-    label: "Ajustes",
-    icon: (a) => <Settings className={cn("h-5 w-5 mb-1", a ? "text-primary" : "text-muted-foreground")} strokeWidth={a ? 2.5 : 2} />,
-  },
-];
+    {
+      tab: "panel",
+      label: "Panel",
+      icon: (a) => <LayoutDashboard className={cn("h-5 w-5 mb-1", a ? "text-primary" : "text-muted-foreground")} strokeWidth={a ? 2.5 : 2} />,
+    },
+    {
+      tab: "lists",
+      label: "Listas",
+      icon: (a) => <List className={cn("h-5 w-5 mb-1", a ? "text-primary" : "text-muted-foreground")} strokeWidth={a ? 2.5 : 2} />,
+    },
+    {
+      tab: "documents",
+      label: "Docs",
+      icon: (a) => <FileText className={cn("h-5 w-5 mb-1", a ? "text-primary" : "text-muted-foreground")} strokeWidth={a ? 2.5 : 2} />,
+    },
+    {
+      tab: "settings",
+      label: "Ajustes",
+      icon: (a) => <Settings className={cn("h-5 w-5 mb-1", a ? "text-primary" : "text-muted-foreground")} strokeWidth={a ? 2.5 : 2} />,
+    },
+  ];
 
 interface BottomNavProps {
   activeTab: Tab;
@@ -52,16 +52,16 @@ export function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>, tab: Tab) => {
     // Ripple effect
     const button = e.currentTarget;
-    const rect   = button.getBoundingClientRect();
-    const size   = Math.max(rect.width, rect.height);
-    const x      = e.clientX - rect.left - size / 2;
-    const y      = e.clientY - rect.top  - size / 2;
+    const rect = button.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    const x = e.clientX - rect.left - size / 2;
+    const y = e.clientY - rect.top - size / 2;
 
     const ripple = document.createElement("span");
-    ripple.className   = "ripple-effect";
+    ripple.className = "ripple-effect";
     ripple.style.width = ripple.style.height = `${size}px`;
-    ripple.style.left  = `${x}px`;
-    ripple.style.top   = `${y}px`;
+    ripple.style.left = `${x}px`;
+    ripple.style.top = `${y}px`;
     button.appendChild(ripple);
     setTimeout(() => ripple.remove(), 600);
 

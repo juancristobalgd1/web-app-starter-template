@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { GlassCard } from "@/components/ui/satin-liquid-glass";
+import { GlassCard } from "@/components/ui/satin-liquid-glass_legacy";
 import { Mail, ArrowLeft } from "lucide-react";
 
 interface ForgotPasswordFormProps {
@@ -11,9 +11,9 @@ interface ForgotPasswordFormProps {
 }
 
 export function ForgotPasswordForm({ onBack }: ForgotPasswordFormProps) {
-  const [email,     setEmail]     = useState("");
+  const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [sent,      setSent]      = useState(false);
+  const [sent, setSent] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

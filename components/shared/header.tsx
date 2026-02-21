@@ -1,117 +1,430 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import type React from "react";
+import { useState, useEffect } from "react";
+import type { ReactNode } from "react";
+import { ArrowLeft, Search, LogOut } from "lucide-react";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/components/providers/auth-provider";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { LiquidGlass } from "@/components/ui/satin-liquid-glass";
-import {
-    ArrowLeft,
-    Search,
-    Bell,
-    ChevronDown,
-    Store,
-} from "lucide-react";
+import { Avatar, AvatarFallback } from "../ui/avatar";
+import { useActiveBusinessId } from "../../hooks/use-active-business-id";
+import { Store } from "lucide-react";
+import Image from "next/image";
 
-interface HeaderProps {
-    title?: string;
-    showBack?: boolean;
-    rightActions?: React.ReactNode;
-    className?: string;
-    businessName?: string;
+import { Skeleton } from "../ui/skeleton";
+import { useLiquidGlass } from "../ui/satin-liquid-glass";
+import { ToggleTheme } from "../ui/toggle-theme";
+import { useCurrentUserProfile } from "../../hooks/use-current-user-profile";
+
+function normalizeLogoSrc(logoDataUrl: unknown, businessId: unknown) {
+    if (typeof logoDataUrl !== "string") return null;
+    const raw = logoDataUrl.trim();
+    if (!raw) return null;
+    if (raw.startsWith("data:")) return raw;
+    if (raw.startsWith("/api/businesses/")) return raw;
+    if (typeof businessId !== "string" || !businessId) return raw;
+
+    const publicMarker = "/storage/v1/object/public/business-assets/";
+    const signMarker = "/storage/v1/object/sign/business-assets/";
+
+    let idx = raw.indexOf(publicMarker);
+    let path = "";
+
+    if (idx !== -1) {
+        path = raw.slice(idx + publicMarker.length);
+    } else {
+        idx = raw.indexOf(signMarker);
+        if (idx !== -1) {
+            path = raw.slice(idx + signMarker.length);
+            const q = path.indexOf("?");
+            if (q !== -1) path = path.slice(0, q);
+        }
+    }
+
+    if (!path && raw.startsWith("logos/")) {
+        path = raw;
+    }
+
+    if (!path) return raw;
+
+    return `/api/businesses/${businessId}/logo?path=${encodeURIComponent(path)}`;
 }
 
-export function Header({ title, showBack, rightActions, className, businessName = "Mi App" }: HeaderProps) {
+interface HeaderProps {
+    title?: ReactNode;
+    showLogo?: boolean;
+    showUserMenu?: boolean;
+    onBack?: () => void;
+    className?: string;
+    rightActions?: Array<{
+        icon: ReactNode;
+        onClick: () => void;
+        className?: string;
+        ariaLabel?: string;
+        badge?: number;
+        ariaExpanded?: boolean;
+        ariaControls?: string;
+        isRawNode?: boolean;
+    }>;
+    showSearch?: boolean;
+    onSearchChange?: (query: string) => void;
+    searchQuery?: string;
+    hideUserProfileButton?: boolean;
+    additionalContent?: ReactNode;
+    containerClassName?: string;
+}
+
+export const Header: React.FC<HeaderProps> = ({
+    title,
+    showUserMenu = true,
+    onBack,
+    className,
+    rightActions,
+    showSearch,
+    onSearchChange,
+    searchQuery = "",
+    hideUserProfileButton,
+    additionalContent,
+    showLogo = false,
+    containerClassName,
+}) => {
+    const { user, signOut } = useAuth();
+    const { businessProfile } = useActiveBusinessId();
+    const { profile } = useCurrentUserProfile();
     const router = useRouter();
-    const [scrolled, setScrolled] = useState(false);
+    const [showShadow, setShowShadow] = useState(false);
+    const [logoError, setLogoError] = useState(false);
+    const [avatarError, setAvatarError] = useState(false);
+    const logoSrc = normalizeLogoSrc(businessProfile?.logoDataUrl, businessProfile?.id);
+    const { isDark, style: subtleGlassStyle } = useLiquidGlass({ intensity: "medium", satin: true });
+    const { style: buttonGlassStyle } = useLiquidGlass({ intensity: "medium", satin: true });
 
     useEffect(() => {
         const handleScroll = () => {
-            const scrollContainers = document.querySelectorAll("main, .overflow-y-auto");
-            let isScrolled = window.scrollY > 2;
-            for (const c of Array.from(scrollContainers)) {
-                if (c.scrollTop > 2) { isScrolled = true; break; }
+            // Check window scroll first
+            if (window.scrollY > 0) {
+                setShowShadow(true);
+                return;
             }
-            setScrolled(isScrolled);
+
+            // If window scroll is 0, check if there's any overflow container scrolling
+            // Cache the query for better performance
+            const scrollContainers = document.querySelectorAll(".overflow-y-auto");
+            for (const container of Array.from(scrollContainers)) {
+                if (container.scrollTop > 0) {
+                    setShowShadow(true);
+                    return;
+                }
+            }
+
+            setShowShadow(false);
         };
-        window.addEventListener("scroll", handleScroll, { capture: true, passive: true });
+
+        // Single listener with capture for all scroll events
+        window.addEventListener("scroll", handleScroll, {
+            capture: true,
+            passive: true
+        });
+
         handleScroll();
-        return () => window.removeEventListener("scroll", handleScroll, { capture: true });
+        return () => {
+            window.removeEventListener("scroll", handleScroll, { capture: true });
+        };
     }, []);
+
+    useEffect(() => {
+        setLogoError(false);
+    }, [logoSrc]);
+
+    // Reset avatar error when profile avatar changes
+    useEffect(() => {
+        setAvatarError(false);
+    }, [profile?.avatar_url]);
+
+    const handleSignOut = async () => {
+        try {
+            await signOut();
+            router.push("/auth");
+        } catch (error) {
+            console.error("Error signing out:", error);
+        }
+    };
+
+    const scrollGlassStyle: React.CSSProperties = {
+        backgroundColor: isDark ? "rgba(30, 30, 32, 0.7)" : "rgba(255, 255, 255, 0.4)",
+        backdropFilter: "blur(20px) saturate(180%)",
+        WebkitBackdropFilter: "blur(20px) saturate(180%)",
+        boxShadow: showShadow ? "0 4px 12px rgba(0, 0, 0, 0.05)" : "none",
+    };
 
     return (
         <header
+            data-system-bar
             className={cn(
-                "sticky top-0 z-[100] w-full flex-shrink-0",
-                "pt-[env(safe-area-inset-top)]",
-                "transition-all duration-300",
+                "sticky top-0 z-50 flex flex-col pt-[env(safe-area-inset-top)] transition-[background-color,color,box-shadow,border-color] duration-300 ease-in-out rounded-none",
+                "before:content-[''] before:absolute before:inset-x-0 before:top-[-100vh] before:h-[100vh] before:bg-inherit before:-z-10",
                 className
             )}
-            style={{
-                backgroundColor: scrolled ? "rgba(255,255,255,0.88)" : "var(--background)",
-                backdropFilter: scrolled ? "blur(16px) saturate(180%)" : "none",
-                WebkitBackdropFilter: scrolled ? "blur(16px) saturate(180%)" : "none" as any,
-                borderBottom: "1px solid rgba(0,0,0,0.06)",
-            }}
+            style={scrollGlassStyle}
         >
-            <div className="w-full h-14 flex items-center justify-between px-4 md:px-5">
-                {/* Left */}
-                <div className="flex items-center gap-2 min-w-0">
-                    {showBack ? (
-                        <button
-                            onClick={() => router.back()}
-                            className="h-9 w-9 rounded-full flex items-center justify-center hover:bg-black/5 transition-colors"
+            <div className={cn("flex w-full min-w-0 max-w-full items-center justify-between gap-2 px-3 py-2", containerClassName)}>
+                <div className="flex min-w-0 flex-1 items-center">
+                    {onBack && (
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => (onBack ? onBack() : router.back())}
+                            className="mr-2 bg-transparent hover:bg-transparent"
+                            aria-label="Volver"
+                            style={{ ...buttonGlassStyle, borderRadius: "9999px" }}
                         >
                             <ArrowLeft className="h-5 w-5 text-foreground" />
-                        </button>
-                    ) : (
-                        <LiquidGlass
-                            as="button"
-                            intensity="subtle"
-                            satin={false}
-                            radius="xl"
-                            disableActive={false}
-                            className="flex items-center gap-2 -ml-1 px-2 py-1.5 cursor-pointer"
-                            style={{ boxShadow: "none", border: "none", backgroundColor: "transparent" }}
+                        </Button>
+                    )}
+                    {showLogo && (
+                        <div className="mr-2">
+                            {logoSrc && !logoError ? (
+                                <div className="h-8 w-8 rounded-lg overflow-hidden border border-border">
+                                    <Image
+                                        src={logoSrc}
+                                        alt={businessProfile.name || "Logo"}
+                                        width={32}
+                                        height={32}
+                                        className="h-full w-full object-cover"
+                                        unoptimized={true}
+                                        priority
+                                        onError={() => setLogoError(true)}
+                                    />
+                                </div>
+                            ) : (
+                                <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center border border-primary/20">
+                                    <Store className="h-5 w-5 text-primary" />
+                                </div>
+                            )}
+                        </div>
+                    )}
+                    {title && (
+                        <h1 className="min-w-0 max-w-full overflow-hidden text-lg font-semibold text-foreground">
+                            {title}
+                        </h1>
+                    )}
+                    {!(onBack || title) && (
+                        <div
+                            className={cn(
+                                "flex items-center space-x-2",
+                                (rightActions?.length || showUserMenu) && "invisible"
+                            )}
                         >
-                            <div className="w-7 h-7 rounded-full bg-primary flex items-center justify-center flex-shrink-0 shadow-sm">
-                                <Store className="h-3.5 w-3.5 text-primary-foreground" />
-                            </div>
-                            <span className="text-[15px] font-semibold text-foreground leading-none">
-                                {title ?? businessName}
-                            </span>
-                            <ChevronDown className="h-3.5 w-3.5 text-muted-foreground mt-px" strokeWidth={2.5} />
-                        </LiquidGlass>
+                            {rightActions?.map((_, index) => (
+                                <div key={`placeholder-left-${index}`} className="w-10 h-10" />
+                            ))}
+                            {showUserMenu && (!rightActions || rightActions.length === 0) && (
+                                <div className="w-10 h-10" />
+                            )}
+                            {!((rightActions?.length || 0) > 0 || showUserMenu) && (
+                                <div className="w-10 h-10" />
+                            )}
+                        </div>
                     )}
                 </div>
 
-                {/* Right */}
-                <div className="flex items-center gap-0.5">
-                    {rightActions ?? (
-                        <>
-                            <LiquidGlass
-                                as="button"
-                                intensity="subtle"
-                                satin={false}
-                                radius="full"
-                                className="h-9 w-9 flex items-center justify-center cursor-pointer"
-                                style={{ boxShadow: "none", border: "none", backgroundColor: "transparent" }}
-                            >
-                                <Search className="h-[18px] w-[18px] text-foreground/70" strokeWidth={2} />
-                            </LiquidGlass>
-                            <LiquidGlass
-                                as="button"
-                                intensity="subtle"
-                                satin={false}
-                                radius="full"
-                                className="h-9 w-9 flex items-center justify-center cursor-pointer"
-                                style={{ boxShadow: "none", border: "none", backgroundColor: "transparent" }}
-                            >
-                                <Bell className="h-[18px] w-[18px] text-foreground/70" strokeWidth={2} />
-                            </LiquidGlass>
-                        </>
+                <div className="flex flex-shrink-0 items-center gap-2">
+                    {showSearch && (
+                        <div className="relative w-full max-w-[60vw]">
+                            <input
+                                type="text"
+                                placeholder="Buscar..."
+                                className="w-full max-w-full px-3 py-2 rounded-md border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                                value={searchQuery}
+                                onChange={(e) =>
+                                    onSearchChange && onSearchChange(e.target.value)
+                                }
+                            />
+                            <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                <Search className="h-5 w-5 text-muted-foreground" />
+                            </div>
+                        </div>
+                    )}
+
+                    {rightActions &&
+                        rightActions.map((action, index) =>
+                            action.isRawNode ? (
+                                <div
+                                    key={`right-action-${index}`}
+                                    className={cn("relative cursor-pointer", action.className)}
+                                    aria-label={action.ariaLabel}
+                                    onClick={action.onClick}
+                                    role="button"
+                                    tabIndex={0}
+                                    onKeyDown={(e) => {
+                                        if (e.key === "Enter" || e.key === " ") {
+                                            e.preventDefault();
+                                            action.onClick();
+                                        }
+                                    }}
+                                >
+                                    {action.icon}
+                                    {action.badge !== undefined && action.badge > 0 && (
+                                        <span className="absolute -top-1 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-medium text-white shadow-sm">
+                                            {action.badge > 99 ? "99+" : action.badge}
+                                        </span>
+                                    )}
+                                </div>
+                            ) : (
+                                <Button
+                                    key={`right-action-${index}`}
+                                    variant="ghost"
+                                    size="icon"
+                                    onClick={action.onClick}
+                                    className={cn("relative bg-transparent hover:bg-transparent", action.className)}
+                                    aria-label={action.ariaLabel}
+                                    aria-expanded={action.ariaExpanded}
+                                    aria-controls={action.ariaControls}
+                                    style={{ ...buttonGlassStyle, borderRadius: "9999px" }}
+                                >
+                                    <div className="text-foreground">{action.icon}</div>
+                                    {action.badge !== undefined && action.badge > 0 && (
+                                        <span className="absolute -top-1 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-medium text-white shadow-sm">
+                                            {action.badge > 99 ? "99+" : action.badge}
+                                        </span>
+                                    )}
+                                </Button>
+                            )
+                        )}
+
+                    {showUserMenu && !hideUserProfileButton && (
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <div
+                                    className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-transparent hover:bg-transparent h-10 px-2 gap-2 rounded-full cursor-pointer min-w-[3rem]"
+                                    role="button"
+                                    tabIndex={0}
+                                    aria-label="Menú de usuario"
+                                    style={{ ...buttonGlassStyle, borderRadius: "9999px" }}
+                                >
+                                    <Avatar className="h-6 w-6">
+                                        {profile?.avatar_url && !avatarError ? (
+                                            <Image
+                                                src={profile.avatar_url}
+                                                alt="Foto de perfil"
+                                                fill
+                                                sizes="24px"
+                                                className="object-cover"
+                                                onError={() => setAvatarError(true)}
+                                            />
+                                        ) : null}
+                                        <AvatarFallback className="bg-primary text-primary-foreground text-xs font-medium">
+                                            {profile?.initials || "U"}
+                                        </AvatarFallback>
+                                    </Avatar>
+                                    <span className="hidden md:block font-medium text-sm truncate max-w-[100px]">
+                                        {profile?.name || user?.email?.split('@')[0] || "Usuario"}
+                                    </span>
+                                </div>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="w-56">
+                                {user ? (
+                                    <>
+                                        <DropdownMenuLabel className="font-normal">
+                                            <div className="flex flex-col space-y-1">
+                                                <p className="text-sm font-medium leading-none text-foreground">
+                                                    {profile?.name || "Mi Cuenta"}
+                                                </p>
+                                                <p className="text-xs leading-none text-muted-foreground">
+                                                    {profile?.email || user.email}
+                                                </p>
+                                            </div>
+                                        </DropdownMenuLabel>
+                                        <DropdownMenuSeparator />
+                                        <div className="flex items-center justify-between px-2 py-1.5">
+                                            <span className="text-sm font-medium text-foreground">Modo</span>
+                                            <ToggleTheme className="border-none bg-transparent" />
+                                        </div>
+                                        <DropdownMenuSeparator />
+                                        <DropdownMenuItem
+                                            onClick={handleSignOut}
+                                            className="cursor-pointer text-red-600 hover:!bg-red-100 hover:!text-red-700 focus:!bg-red-100 focus:!text-red-700 dark:text-red-500 dark:hover:!bg-red-700 dark:hover:!text-red-100 dark:focus:!bg-red-700 dark:focus:!text-red-100"
+                                        >
+                                            <LogOut className="mr-2 h-4 w-4" />
+                                            <span>Cerrar sesión</span>
+                                        </DropdownMenuItem>
+                                    </>
+                                ) : (
+                                    <DropdownMenuItem
+                                        onClick={() => router.push("/auth")}
+                                        className="cursor-pointer"
+                                    >
+                                        <span>Iniciar sesión</span>
+                                    </DropdownMenuItem>
+                                )}
+                            </DropdownMenuContent>
+                        </DropdownMenu>
                     )}
                 </div>
             </div>
+
+            {additionalContent && (
+                <div className="w-full bg-inherit">
+                    {additionalContent}
+                </div>
+            )}
         </header>
     );
-}
+};
+
+export const HeaderSkeleton: React.FC<{
+    showBack?: boolean;
+    showTitle?: boolean;
+    rightActionsCount?: number;
+    showUserMenu?: boolean;
+    className?: string;
+    additionalContent?: ReactNode;
+}> = ({
+    showBack = false,
+    showTitle = true,
+    rightActionsCount = 1,
+    showUserMenu = true,
+    className,
+    additionalContent,
+}) => {
+        return (
+            <div
+                data-system-bar
+                className={cn(
+                    "sticky top-0 z-50 flex flex-col bg-background pt-[env(safe-area-inset-top)] border-b border-transparent transition-[background-color,color,box-shadow,border-color] duration-300 ease-in-out rounded-none",
+                    "before:content-[''] before:absolute before:inset-x-0 before:top-[-100vh] before:h-[100vh] before:bg-inherit before:-z-10",
+                    className
+                )}
+            >
+                <div className="flex w-full min-w-0 max-w-full items-center justify-between gap-2 px-3 py-2">
+                    <div className="flex min-w-0 flex-1 items-center">
+                        {showBack && <Skeleton className="h-9 w-9 mr-2 rounded-md" />}
+                        {showTitle && <Skeleton className="h-6 w-32" />}
+                    </div>
+
+                    <div className="flex flex-shrink-0 items-center gap-2">
+                        {Array.from({ length: rightActionsCount }).map((_, i) => (
+                            <Skeleton
+                                key={`right-action-skeleton-${i}`}
+                                className="h-9 w-9 rounded-md"
+                            />
+                        ))}
+                        {showUserMenu && <Skeleton className="h-9 w-9 rounded-full" />}
+                    </div>
+                </div>
+                {additionalContent && (
+                    <div className="w-full bg-inherit">{additionalContent}</div>
+                )}
+            </div>
+        );
+    };

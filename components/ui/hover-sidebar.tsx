@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { useLiquidGlass } from "@/components/ui/satin-liquid-glass";
 import Link, { type LinkProps } from "next/link";
 import React, { useState, createContext, useContext, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
@@ -69,6 +70,7 @@ export const SidebarBody = (props: React.ComponentProps<typeof motion.div>) => (
 
 export const DesktopSidebar = ({ className, children, ...props }: React.ComponentProps<typeof motion.div>) => {
   const { open, setOpen, animate } = useSidebar();
+  const { style: glassStyle } = useLiquidGlass({ intensity: "medium", satin: true });
 
   useEffect(() => {
     const width = animate ? (open ? "300px" : "60px") : "300px";
@@ -78,11 +80,14 @@ export const DesktopSidebar = ({ className, children, ...props }: React.Componen
   return (
     <motion.div
       className={cn(
-        "h-full py-4 hidden md:flex md:flex-col bg-sidebar w-[var(--sidebar-width)]",
-        "flex-shrink-0 px-0 relative z-[100]",
+        "h-full py-4 hidden md:flex md:flex-col w-[var(--sidebar-width)]",
+        "flex-shrink-0 px-0 relative z-[100] border-r border-sidebar-border",
         className
       )}
-      style={{ "--sidebar-width": animate ? (open ? "300px" : "60px") : "300px" } as React.CSSProperties}
+      style={{
+        ...glassStyle,
+        "--sidebar-width": animate ? (open ? "300px" : "60px") : "300px",
+      } as React.CSSProperties}
       animate={{ width: animate ? (open ? "300px" : "60px") : "300px" }}
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
@@ -95,8 +100,12 @@ export const DesktopSidebar = ({ className, children, ...props }: React.Componen
 
 export const MobileSidebar = ({ className, children, ...props }: React.ComponentProps<"div">) => {
   const { open, setOpen } = useSidebar();
+  const { style: glassStyle } = useLiquidGlass({ intensity: "medium", satin: true });
   return (
-    <div className={cn("h-10 px-4 py-4 flex flex-row md:hidden items-center justify-between bg-sidebar w-full")}>
+    <div
+      className={cn("h-10 px-4 py-4 flex flex-row md:hidden items-center justify-between w-full")}
+      style={glassStyle}
+    >
       <div className="flex justify-end z-20 w-full">
         <Menu className="text-sidebar-foreground cursor-pointer" onClick={() => setOpen(!open)} />
       </div>
@@ -108,9 +117,10 @@ export const MobileSidebar = ({ className, children, ...props }: React.Component
             exit={{ x: "-100%", opacity: 0 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
             className={cn(
-              "fixed h-full w-full inset-0 bg-sidebar p-10 z-[100] flex flex-col justify-between",
+              "fixed h-full w-full inset-0 p-10 z-[100] flex flex-col justify-between",
               className
             )}
+            style={glassStyle}
           >
             <div className="absolute right-10 top-10 z-50 text-sidebar-foreground cursor-pointer" onClick={() => setOpen(false)}>
               <X />

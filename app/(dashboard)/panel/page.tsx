@@ -2,7 +2,7 @@
 
 import { PageHeader } from "@/components/shared/page-header";
 import { AnimatedFab } from "@/components/ui/animated-fab";
-import { GlassCard } from "@/components/ui/satin-liquid-glass";
+import { GlassCard } from "@/components/ui/satin-liquid-glass_legacy";
 import { Plus, Star } from "lucide-react";
 
 export default function PanelPage() {
@@ -56,8 +56,8 @@ export default function PanelPage() {
 }
 
 const STAT_CARDS = [
-  { icon: "📦", value: "0",   label: "Total items" },
-  { icon: "✅", value: "0",   label: "Completados" },
-  { icon: "⏳", value: "0",   label: "Pendientes" },
-  { icon: "📈", value: "0%",  label: "Progreso" },
+  { icon: "📦", value: "0", label: "Total items" },
+  { icon: "✅", value: "0", label: "Completados" },
+  { icon: "⏳", value: "0", label: "Pendientes" },
+  { icon: "📈", value: "0%", label: "Progreso" },
 ];

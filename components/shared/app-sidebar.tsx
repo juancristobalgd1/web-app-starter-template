@@ -1,110 +1,181 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { LiquidGlass } from "@/components/ui/satin-liquid-glass";
-import { motion, AnimatePresence } from "framer-motion";
 import {
-  LayoutDashboard,
-  List,
-  FileText,
+  Sidebar as HoverSidebar,
+  SidebarBody,
+} from "@/components/ui/hover-sidebar";
+import { hapticTap } from "../../hooks/pwa/use-haptic";
+import {
   Settings,
+  List,
+  LayoutDashboard,
   Store,
+  FileText,
+  LayoutDashboardIcon as LayoutDashboardFilled,
+  ListFilterIcon as ListFilledIcon,
+  CalendarFold as CalendarFilled,
+  Settings2Icon as SettingsFilledIcon,
+  CalendarCheck,
 } from "lucide-react";
+import { useI18n } from "../../hooks/use-i18n";
+import { useUserStorage } from "../../hooks/use-user-storage";
+import { usePermission } from "../../hooks/use-permission";
+import { useTeamBusiness } from "../../hooks/use-team-business";
 
 type Tab = "panel" | "lists" | "documents" | "settings";
 
 interface AppSidebarProps {
-  activeTab: Tab;
-  onTabChange: (tab: Tab) => void;
+  activeTab?: Tab;
+  onTabChange?: (tab: Tab) => void;
 }
 
-const NAV_LINKS: { tab: Tab; label: string; href: string; icon: typeof LayoutDashboard }[] = [
-  { tab: "panel", label: "Panel", href: "/panel", icon: LayoutDashboard },
-  { tab: "lists", label: "Listas", href: "/lists", icon: List },
-  { tab: "documents", label: "Documentos", href: "/documents", icon: FileText },
-  { tab: "settings", label: "Ajustes", href: "/settings", icon: Settings },
-];
-
-const COLLAPSED_W = 52;
-const EXPANDED_W = 200;
-
-/**
- * AppSidebar – spans the FULL height of the viewport.
- * Collapses to icon-only (52 px); expands to show labels on hover.
- */
 export function AppSidebar({ activeTab, onTabChange }: AppSidebarProps) {
-  const [hovered, setHovered] = useState(false);
+  const pathname = usePathname();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { t } = useI18n();
+  const { getLocalStorageItem } = useUserStorage();
+  const { getAllowedTabs, loading: permissionLoading, role, canAccessAI } = usePermission();
+  const [sidebarLogoUrl, setSidebarLogoUrl] = useState<string | null>(null);
+  const [sidebarBusinessName, setSidebarBusinessName] = useState<string | null>(null);
+  const [aiOpen, setAiOpen] = useState(false);
+
+  const openAi = useCallback(() => {
+    hapticTap();
+    setAiOpen(true);
+  }, []);
+  const closeAi = useCallback(() => setAiOpen(false), []);
+
+  useEffect(() => {
+    try {
+      const raw = getLocalStorageItem("businessProfile");
+      if (raw) {
+        const profile = JSON.parse(raw);
+        setSidebarLogoUrl(profile?.logoDataUrl || null);
+        setSidebarBusinessName(profile?.name || null);
+      }
+    } catch { }
+  }, [getLocalStorageItem]);
+
+  const { businessName: teamBusinessName, isTeamMember } = useTeamBusiness();
+
+  useEffect(() => {
+    const refreshProfile = () => {
+      try {
+        const raw = getLocalStorageItem("businessProfile");
+        if (raw) {
+          const p = JSON.parse(raw);
+          setSidebarLogoUrl(p?.logoDataUrl || null);
+          setSidebarBusinessName((p?.name || "").trim() || null);
+        }
+      } catch { }
+    };
+    const onUpdated = () => refreshProfile();
+    window.addEventListener("businessProfileUpdated", onUpdated);
+    window.addEventListener("storage", onUpdated);
+    return () => {
+      window.removeEventListener("businessProfileUpdated", onUpdated);
+      window.removeEventListener("storage", onUpdated);
+    };
+  }, [getLocalStorageItem]);
+
+  const displayBusinessName = isTeamMember ? (teamBusinessName || "Negocio") : (sidebarBusinessName || "Stockli");
+
+  const allowedTabs = useMemo(() => getAllowedTabs(), [getAllowedTabs, permissionLoading, role]);
+
+  const navigationLinks = useMemo(() => {
+    const all = [
+      {
+        tab: "panel",
+        label: t("panel.title"),
+        href: "/panel",
+        icon: pathname === "/panel" ? <LayoutDashboardFilled className="h-5 w-5" /> : <LayoutDashboard className="h-5 w-5" />,
+      },
+      {
+        tab: "lists",
+        label: t("lists.title"),
+        href: "/lists",
+        icon: pathname === "/lists" ? <ListFilledIcon className="h-5 w-5" /> : <List className="h-5 w-5" />,
+      },
+      {
+        tab: "documents",
+        label: t("documents.title"),
+        href: "/documentos",
+        icon: pathname === "/documentos" ? <FileText className="h-5 w-5 text-primary" /> : <FileText className="h-5 w-5" />,
+      },
+      {
+        tab: "settings",
+        label: t("settings.title"),
+        href: "/settings",
+        icon: pathname === "/settings" ? <SettingsFilledIcon className="h-5 w-5" /> : <Settings className="h-5 w-5" />,
+      },
+    ];
+    return all.filter(link => allowedTabs.includes(link.tab as any));
+  }, [t, pathname, allowedTabs]);
 
   return (
-    <motion.aside
-      className="hidden md:flex flex-col h-full flex-shrink-0 overflow-hidden"
-      animate={{ width: hovered ? EXPANDED_W : COLLAPSED_W }}
-      transition={{ type: "spring", stiffness: 320, damping: 30, mass: 0.8 }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
-      <LiquidGlass
-        intensity="subtle"
-        satin={false}
-        radius="none"
-        disableHover
-        disableActive
-        className="flex flex-col h-full w-full"
-        style={{
-          border: "none",
-          borderRight: "1px solid rgba(0,0,0,0.06)",
-          boxShadow: "none",
-        }}
+    <div className="hidden md:block h-full">
+      <HoverSidebar
+        open={sidebarOpen}
+        setOpen={setSidebarOpen}
+        animate={true}
       >
-        {/* Nav links — top section with breathing room from the very top */}
-        <nav className="flex flex-col gap-1 pt-5 px-2 flex-1">
-          {NAV_LINKS.map(({ tab, label, href, icon: Icon }) => {
-            const isActive = activeTab === tab;
-            return (
-              <Link
-                key={tab}
-                href={href}
-                title={label}
-                onClick={() => onTabChange(tab)}
-                className={cn(
-                  "flex items-center gap-3 h-9 px-2 rounded-xl transition-colors overflow-hidden",
-                  isActive
-                    ? "bg-primary/10 text-primary"
-                    : "text-muted-foreground hover:bg-black/5 hover:text-foreground"
-                )}
-              >
-                <Icon
-                  className="h-[18px] w-[18px] flex-shrink-0"
-                  strokeWidth={isActive ? 2.5 : 2}
-                />
-                <AnimatePresence>
-                  {hovered && (
-                    <motion.span
-                      key="label"
-                      initial={{ opacity: 0, x: -6 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -6 }}
-                      transition={{ duration: 0.12, delay: 0.05 }}
-                      className="text-sm font-medium whitespace-nowrap"
-                    >
-                      {label}
-                    </motion.span>
+        <SidebarBody className="justify-between gap-10">
+          <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
+            <div className="mt-24 flex flex-col gap-2 px-2">
+              {navigationLinks.map((link, idx) => (
+                <Link
+                  key={idx}
+                  href={link.href}
+                  onClick={() => onTabChange?.(link.tab as Tab)}
+                  className={cn(
+                    "flex items-center justify-start gap-3 group/sidebar px-3 py-2.5 rounded-xl cursor-pointer transition-all duration-200 text-sm font-medium text-sidebar-foreground/80 shadow-none",
+                    pathname === link.href
+                      ? "bg-sidebar-accent/80 text-sidebar-accent-foreground shadow-none ring-0"
+                      : "hover:bg-sidebar-accent/70 hover:text-sidebar-accent-foreground hover:shadow-none"
                   )}
-                </AnimatePresence>
-              </Link>
-            );
-          })}
-        </nav>
-
-        {/* Bottom: brand/store icon */}
-        <div className="flex items-center justify-center pb-4 px-2">
-          <div className="w-9 h-9 rounded-full bg-primary flex items-center justify-center shadow-sm flex-shrink-0">
-            <Store className="h-4 w-4 text-primary-foreground" />
+                >
+                  <div className="flex-shrink-0">{link.icon}</div>
+                  {sidebarOpen && (
+                    <span className="text-sm font-medium tracking-tight group-hover/sidebar:translate-x-1 transition duration-150 whitespace-pre">
+                      {link.label}
+                    </span>
+                  )}
+                </Link>
+              ))}
+            </div>
           </div>
-        </div>
-      </LiquidGlass>
-    </motion.aside>
+          <div className="p-2">
+            <Link
+              href="/"
+              className="flex items-center gap-3 cursor-pointer hover:bg-muted/50 rounded-lg p-2 -m-2 transition-colors"
+            >
+              <div
+                className={`w-8 h-8 flex items-center justify-center flex-shrink-0 rounded-full border-primary bg-primary text-primary-foreground"}`}
+              >
+                {sidebarLogoUrl ? (
+                  <img
+                    src={sidebarLogoUrl}
+                    alt={sidebarBusinessName || "Logo"}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <Store className="h-4 w-4" />
+                )}
+              </div>
+              {sidebarOpen && (
+                <span className="font-medium text-foreground whitespace-nowrap">
+                  {displayBusinessName}
+                </span>
+              )}
+            </Link>
+          </div>
+        </SidebarBody>
+      </HoverSidebar>
+
+    </div>
   );
 }
