@@ -87,25 +87,25 @@ export function AppSidebar({ activeTab, onTabChange }: AppSidebarProps) {
         tab: "panel",
         label: t("panel.title"),
         href: "/panel",
-        icon: pathname === "/panel" ? <LayoutDashboardFilled className="h-5 w-5" /> : <LayoutDashboard className="h-5 w-5" />,
+        icon: pathname === "/panel" ? <LayoutDashboardFilled className="h-5 w-5 text-sidebar-foreground" /> : <LayoutDashboard className="h-5 w-5 text-sidebar-foreground" />,
       },
       {
         tab: "lists",
         label: t("lists.title"),
         href: "/lists",
-        icon: pathname === "/lists" ? <ListFilledIcon className="h-5 w-5" /> : <List className="h-5 w-5" />,
+        icon: pathname === "/lists" ? <ListFilledIcon className="h-5 w-5 text-sidebar-foreground" /> : <List className="h-5 w-5 text-sidebar-foreground" />,
       },
       {
         tab: "documents",
         label: t("documents.title"),
         href: "/documents",
-        icon: pathname === "/documents" ? <FileText className="h-5 w-5" /> : <FileText className="h-5 w-5" />,
+        icon: pathname === "/documents" ? <FileText className="h-5 w-5 text-sidebar-foreground" /> : <FileText className="h-5 w-5 text-sidebar-foreground" />,
       },
       {
         tab: "settings",
         label: t("settings.title"),
         href: "/settings",
-        icon: pathname === "/settings" ? <SettingsFilledIcon className="h-5 w-5" /> : <Settings className="h-5 w-5" />,
+        icon: pathname === "/settings" ? <SettingsFilledIcon className="h-5 w-5 text-sidebar-foreground" /> : <Settings className="h-5 w-5 text-sidebar-foreground" />,
       },
     ];
     return all.filter(link => allowedTabs.includes(link.tab as any));
@@ -118,7 +118,7 @@ export function AppSidebar({ activeTab, onTabChange }: AppSidebarProps) {
         setOpen={setSidebarOpen}
         animate={true}
       >
-        <SidebarBody className="justify-between gap-10">
+        <SidebarBody className="justify-between gap-10 text-sidebar-foreground [&_a]:text-sidebar-foreground [&_a:hover]:text-sidebar-accent-foreground [&_svg]:text-sidebar-foreground">
           <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
             <div className="mt-24 flex flex-col gap-4 px-2">
               {navigationLinks.map((link, idx) => (
@@ -130,12 +130,12 @@ export function AppSidebar({ activeTab, onTabChange }: AppSidebarProps) {
                     "flex items-center justify-start gap-3 group/sidebar px-3 py-2.5 rounded-xl cursor-pointer transition-all duration-200 text-sm font-medium shadow-none",
                     pathname === link.href
                       ? "bg-sidebar-accent/80 !text-sidebar-foreground font-semibold shadow-none ring-0"
-                      : "!text-sidebar-foreground hover:bg-sidebar-accent/70 hover:!text-sidebar-accent-foreground hover:shadow-none"
+                      : "!text-sidebar-foreground hover:bg-sidebar-accent/70 hover:!text-sidebar-foreground hover:shadow-none"
                   )}
                 >
                   <div className="flex-shrink-0">{link.icon}</div>
                   {sidebarOpen && (
-                    <span className="text-sm font-medium tracking-tight group-hover/sidebar:translate-x-1 transition duration-150 whitespace-pre">
+                    <span className="text-sm font-medium tracking-tight text-sidebar-foreground group-hover/sidebar:translate-x-1 transition duration-150 whitespace-pre">
                       {link.label}
                     </span>
                   )}
