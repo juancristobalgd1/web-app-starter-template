@@ -30,7 +30,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
         <div className="relative flex items-center">
           {leftIcon && (
-            <div className="absolute left-3 flex items-center justify-center text-muted-foreground pointer-events-none">
+            <div className="absolute left-3 top-0 bottom-0 flex items-center justify-center text-muted-foreground pointer-events-none">
               {leftIcon}
             </div>
           )}
@@ -40,29 +40,29 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             ref={ref}
             className={cn(
               /* Base */
-              "flex w-full rounded-xl border border-border bg-input",
-              "px-4 py-3 text-sm text-foreground",
-              "placeholder:text-muted-foreground",
+              "flex w-full rounded-2xl border border-border bg-input/50",
+              "px-4 h-[42px] text-base text-foreground shadow-sm backdrop-blur-sm",
+              "placeholder:text-muted-foreground/70",
               /* Font size 16px – previene zoom en iOS */
               "text-[16px] leading-normal",
               /* Focus */
-              "focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent",
+              "focus:outline-none focus:ring-2 focus:ring-ring/20 focus:border-primary",
               /* Disabled */
               "disabled:cursor-not-allowed disabled:opacity-50",
               /* Error */
               error && "border-destructive focus:ring-destructive",
               /* Icons padding */
-              leftIcon  && "pl-10",
-              rightIcon && "pr-10",
+              leftIcon  && "!pl-14",
+              rightIcon && "!pr-14",
               /* Transition */
-              "transition-shadow duration-150",
+              "transition-all duration-200",
               className
             )}
             {...props}
           />
 
           {rightIcon && (
-            <div className="absolute right-3 flex items-center justify-center text-muted-foreground">
+            <div className="absolute right-3 top-0 bottom-0 flex items-center justify-center text-muted-foreground pointer-events-none">
               {rightIcon}
             </div>
           )}
