@@ -1,7 +1,5 @@
 @import "tailwindcss";
 
-@custom-variant dark (&:is(.dark *));
-
 /* =====================================================================
    WEB APP STARTER — Global Styles
    Basado en la arquitectura de stockli/vyyq
@@ -73,11 +71,11 @@
 
   /* Sidebar */
   --sidebar:                    oklch(0.98 0 0);
-  --sidebar-foreground:         oklch(0.33 0 0);
+  --sidebar-foreground:         oklch(0 0 0);
   --sidebar-primary:            oklch(0.63 0.21 29);
   --sidebar-primary-foreground: oklch(0.98 0 0);
   --sidebar-accent:             oklch(0.96 0 0);
-  --sidebar-accent-foreground:  oklch(0.15 0 0);
+  --sidebar-accent-foreground:  oklch(0 0 0);
   --sidebar-border:             oklch(0.92 0.01 254);
   --sidebar-ring:               oklch(0.63 0.21 29);
 

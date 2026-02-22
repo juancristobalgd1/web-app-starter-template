@@ -129,8 +129,8 @@ export function AppSidebar({ activeTab, onTabChange }: AppSidebarProps) {
                   className={cn(
                     "flex items-center justify-start gap-3 group/sidebar px-3 py-2.5 rounded-xl cursor-pointer transition-all duration-200 text-sm font-medium shadow-none",
                     pathname === link.href
-                      ? "bg-sidebar-accent/80 text-sidebar-foreground font-semibold shadow-none ring-0"
-                      : "text-muted-foreground hover:bg-sidebar-accent/70 hover:text-sidebar-accent-foreground hover:shadow-none"
+                      ? "bg-sidebar-accent/80 !text-sidebar-foreground font-semibold shadow-none ring-0"
+                      : "!text-sidebar-foreground hover:bg-sidebar-accent/70 hover:!text-sidebar-accent-foreground hover:shadow-none"
                   )}
                 >
                   <div className="flex-shrink-0">{link.icon}</div>
