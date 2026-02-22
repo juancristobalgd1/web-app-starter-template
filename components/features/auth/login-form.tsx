@@ -36,13 +36,13 @@ export function LoginForm({ onRegister, onForgotPassword }: LoginFormProps) {
   };
 
   return (
-    <GlassCard className="!rounded-2xl !p-6 space-y-5">
-      <div className="space-y-1">
+    <GlassCard className="!rounded-2xl !p-6 space-y-7">
+      <div className="space-y-1.5 mb-2">
         <h2 className="text-xl font-bold text-foreground">Iniciar sesión</h2>
         <p className="text-sm text-muted-foreground">Ingresa tus credenciales</p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-6">
         <Input
           label="Correo electrónico"
           type="email"
@@ -54,31 +54,33 @@ export function LoginForm({ onRegister, onForgotPassword }: LoginFormProps) {
           autoComplete="email"
         />
 
-        <Input
-          label="Contraseña"
-          type={showPass ? "text" : "password"}
-          placeholder="••••••••"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          leftIcon={<Lock className="h-4 w-4" />}
-          rightIcon={
-            <button type="button" onClick={() => setShowPass(!showPass)} className="tap-target">
-              {showPass ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-            </button>
-          }
-          required
-          autoComplete="current-password"
-        />
+        <div className="space-y-2">
+          <Input
+            label="Contraseña"
+            type={showPass ? "text" : "password"}
+            placeholder="••••••••"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            leftIcon={<Lock className="h-4 w-4" />}
+            rightIcon={
+              <button type="button" onClick={() => setShowPass(!showPass)} className="tap-target">
+                {showPass ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
+            }
+            required
+            autoComplete="current-password"
+          />
 
-        <button
-          type="button"
-          onClick={onForgotPassword}
-          className="text-xs text-primary hover:underline w-full text-right"
-        >
-          ¿Olvidaste tu contraseña?
-        </button>
+          <button
+            type="button"
+            onClick={onForgotPassword}
+            className="text-xs text-primary hover:underline w-full text-right pt-1"
+          >
+            ¿Olvidaste tu contraseña?
+          </button>
+        </div>
 
-        <Button type="submit" className="w-full" disabled={isLoading}>
+        <Button type="submit" className="w-full h-12 text-base mt-6" disabled={isLoading}>
           {isLoading ? (
             <span className="flex items-center gap-2">
               <span className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-primary-foreground" />
@@ -88,7 +90,7 @@ export function LoginForm({ onRegister, onForgotPassword }: LoginFormProps) {
         </Button>
       </form>
 
-      <p className="text-center text-sm text-muted-foreground">
+      <p className="text-center text-sm text-muted-foreground pt-2">
         ¿No tienes cuenta?{" "}
         <button onClick={onRegister} className="text-primary font-medium hover:underline">
           Regístrate

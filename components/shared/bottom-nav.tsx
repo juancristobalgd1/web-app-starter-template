@@ -19,22 +19,22 @@ const NAV_ITEMS: {
     {
       tab: "panel",
       label: "Panel",
-      icon: (a) => <LayoutDashboard className={cn("h-5 w-5 mb-1", a ? "text-primary" : "text-muted-foreground")} strokeWidth={a ? 2.5 : 2} />,
+      icon: (a) => <LayoutDashboard className={cn("h-5 w-5 mb-1", a ? "text-foreground" : "text-muted-foreground")} strokeWidth={a ? 2.5 : 2} />,
     },
     {
       tab: "lists",
       label: "Listas",
-      icon: (a) => <List className={cn("h-5 w-5 mb-1", a ? "text-primary" : "text-muted-foreground")} strokeWidth={a ? 2.5 : 2} />,
+      icon: (a) => <List className={cn("h-5 w-5 mb-1", a ? "text-foreground" : "text-muted-foreground")} strokeWidth={a ? 2.5 : 2} />,
     },
     {
       tab: "documents",
       label: "Docs",
-      icon: (a) => <FileText className={cn("h-5 w-5 mb-1", a ? "text-primary" : "text-muted-foreground")} strokeWidth={a ? 2.5 : 2} />,
+      icon: (a) => <FileText className={cn("h-5 w-5 mb-1", a ? "text-foreground" : "text-muted-foreground")} strokeWidth={a ? 2.5 : 2} />,
     },
     {
       tab: "settings",
       label: "Ajustes",
-      icon: (a) => <Settings className={cn("h-5 w-5 mb-1", a ? "text-primary" : "text-muted-foreground")} strokeWidth={a ? 2.5 : 2} />,
+      icon: (a) => <Settings className={cn("h-5 w-5 mb-1", a ? "text-foreground" : "text-muted-foreground")} strokeWidth={a ? 2.5 : 2} />,
     },
   ];
 
@@ -98,7 +98,7 @@ export function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
               {item.icon(isActive)}
               <span className={cn(
                 "text-xs font-medium transition-colors duration-200",
-                isActive ? "text-primary font-semibold" : "text-muted-foreground"
+                isActive ? "text-foreground font-semibold" : "text-muted-foreground"
               )}>
                 {item.label}
               </span>

@@ -36,13 +36,13 @@ export function RegisterForm({ onLogin }: RegisterFormProps) {
   };
 
   return (
-    <GlassCard className="!rounded-2xl !p-6 space-y-5">
+    <GlassCard className="!rounded-2xl !p-6 space-y-7">
       <div className="space-y-1">
         <h2 className="text-xl font-bold text-foreground">Crear cuenta</h2>
         <p className="text-sm text-muted-foreground">Completa tus datos para registrarte</p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-6">
         <Input
           label="Nombre"
           type="text"
@@ -82,7 +82,7 @@ export function RegisterForm({ onLogin }: RegisterFormProps) {
           autoComplete="new-password"
         />
 
-        <Button type="submit" className="w-full" disabled={isLoading}>
+        <Button type="submit" className="w-full mt-6" disabled={isLoading}>
           {isLoading ? (
             <span className="flex items-center gap-2">
               <span className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-primary-foreground" />

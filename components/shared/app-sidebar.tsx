@@ -25,6 +25,7 @@ import { useI18n } from "../../hooks/use-i18n";
 import { useUserStorage } from "../../hooks/use-user-storage";
 import { usePermission } from "../../hooks/use-permission";
 import { useTeamBusiness } from "../../hooks/use-team-business";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 type Tab = "panel" | "lists" | "documents" | "settings";
 
@@ -98,7 +99,7 @@ export function AppSidebar({ activeTab, onTabChange }: AppSidebarProps) {
         tab: "documents",
         label: t("documents.title"),
         href: "/documents",
-        icon: pathname === "/documents" ? <FileText className="h-5 w-5 text-primary" /> : <FileText className="h-5 w-5" />,
+        icon: pathname === "/documents" ? <FileText className="h-5 w-5" /> : <FileText className="h-5 w-5" />,
       },
       {
         tab: "settings",
@@ -119,17 +120,17 @@ export function AppSidebar({ activeTab, onTabChange }: AppSidebarProps) {
       >
         <SidebarBody className="justify-between gap-10">
           <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
-            <div className="mt-24 flex flex-col gap-2 px-2">
+            <div className="mt-24 flex flex-col gap-4 px-2">
               {navigationLinks.map((link, idx) => (
                 <Link
                   key={idx}
                   href={link.href}
                   onClick={() => onTabChange?.(link.tab as Tab)}
                   className={cn(
-                    "flex items-center justify-start gap-3 group/sidebar px-3 py-2.5 rounded-xl cursor-pointer transition-all duration-200 text-sm font-medium text-sidebar-foreground/80 shadow-none",
+                    "flex items-center justify-start gap-3 group/sidebar px-3 py-2.5 rounded-xl cursor-pointer transition-all duration-200 text-sm font-medium shadow-none",
                     pathname === link.href
-                      ? "bg-sidebar-accent/80 text-sidebar-accent-foreground shadow-none ring-0"
-                      : "hover:bg-sidebar-accent/70 hover:text-sidebar-accent-foreground hover:shadow-none"
+                      ? "bg-sidebar-accent/80 text-sidebar-foreground font-semibold shadow-none ring-0"
+                      : "text-muted-foreground hover:bg-sidebar-accent/70 hover:text-sidebar-accent-foreground hover:shadow-none"
                   )}
                 >
                   <div className="flex-shrink-0">{link.icon}</div>
@@ -145,25 +146,29 @@ export function AppSidebar({ activeTab, onTabChange }: AppSidebarProps) {
           <div className="p-2">
             <Link
               href="/"
-              className="flex items-center gap-3 cursor-pointer hover:bg-muted/50 rounded-lg p-2 -m-2 transition-colors"
+              className="flex items-center gap-3 cursor-pointer hover:bg-sidebar-accent/50 rounded-lg p-2 transition-colors overflow-hidden"
             >
-              <div
-                className={`w-8 h-8 flex items-center justify-center flex-shrink-0 rounded-full border-primary bg-primary text-primary-foreground"}`}
-              >
-                {sidebarLogoUrl ? (
-                  <img
+              <Avatar className="h-8 w-8 rounded-lg border border-border">
+                {sidebarLogoUrl && (
+                  <AvatarImage
                     src={sidebarLogoUrl}
                     alt={sidebarBusinessName || "Logo"}
-                    className="w-full h-full object-cover"
+                    className="object-cover"
                   />
-                ) : (
-                  <Store className="h-4 w-4" />
                 )}
-              </div>
+                <AvatarFallback className="rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                  <Store className="size-4" />
+                </AvatarFallback>
+              </Avatar>
               {sidebarOpen && (
-                <span className="font-medium text-foreground whitespace-nowrap">
-                  {displayBusinessName}
-                </span>
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <span className="truncate font-semibold text-sidebar-foreground">
+                    {displayBusinessName}
+                  </span>
+                  <span className="truncate text-xs text-sidebar-foreground/70">
+                    {isTeamMember ? "Equipo" : "Personal"}
+                  </span>
+                </div>
               )}
             </Link>
           </div>
