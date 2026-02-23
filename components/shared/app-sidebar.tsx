@@ -26,6 +26,7 @@ import { useUserStorage } from "../../hooks/use-user-storage";
 import { usePermission } from "../../hooks/use-permission";
 import { useTeamBusiness } from "../../hooks/use-team-business";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { AppLogo } from "@/components/shared/app-logo";
 
 type Tab = "panel" | "lists" | "documents" | "settings";
 
@@ -120,7 +121,12 @@ export function AppSidebar({ activeTab, onTabChange }: AppSidebarProps) {
       >
         <SidebarBody className="justify-between gap-10 text-sidebar-foreground [&_a]:text-sidebar-foreground [&_a:hover]:text-sidebar-accent-foreground [&_svg]:text-sidebar-foreground">
           <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
-            <div className="mt-24 flex flex-col gap-4 px-2">
+            <div className="hidden md:flex flex-col items-center px-2 pt-10 pb-40">
+              <Link href="/panel" className="flex items-center justify-center w-full">
+                <AppLogo size={44} showText={sidebarOpen} className="transition-all duration-200" />
+              </Link>
+            </div>
+            <div className="mt-12 flex flex-col gap-2.5 px-2">
               {navigationLinks.map((link, idx) => (
                 <Link
                   key={idx}
