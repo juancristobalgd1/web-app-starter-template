@@ -15,7 +15,7 @@ export function AppLogo({ size = 64, showText = true, className }: AppLogoProps)
     <div className={cn("flex flex-row items-center gap-3", className)}>
       {/* Icono – reemplazar con tu logo */}
       <div
-        className="rounded-2xl bg-primary flex items-center justify-center text-primary-foreground font-bold shrink-0"
+        className="rounded-2xl bg-sidebar-foreground/10 flex items-center justify-center text-sidebar-foreground font-bold shrink-0"
         style={{ width: size, height: size, fontSize: size * 0.4 }}
       >
         A

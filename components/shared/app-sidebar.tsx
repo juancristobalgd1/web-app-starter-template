@@ -122,12 +122,12 @@ export function AppSidebar({ activeTab, onTabChange }: AppSidebarProps) {
         <SidebarBody className="justify-between gap-10 text-sidebar-foreground pb-6 [&_a]:text-sidebar-foreground [&_a:hover]:text-sidebar-accent-foreground [&_svg]:text-sidebar-foreground">
           <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden pb-24">
             <div className="hidden md:flex flex-col items-center px-2 pt-10 pb-12">
-              <Link href="/panel" className="flex items-center justify-start w-full">
+              <Link href="/panel" className="flex items-center justify-center w-full">
                 <AppLogo size={44} showText={sidebarOpen} className="transition-all duration-200" />
               </Link>
             </div>
             <div
-              className="flex flex-col gap-2.5 px-2 pt-8 mt-32 mb-28"
+              className="flex flex-col gap-4 px-2 pt-8 mt-32 mb-28"
               style={{ marginTop: "128px" }}
             >
               {navigationLinks.map((link, idx) => (
@@ -168,7 +168,7 @@ export function AppSidebar({ activeTab, onTabChange }: AppSidebarProps) {
                       className="object-cover"
                     />
                   )}
-                  <AvatarFallback className="rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                  <AvatarFallback className="rounded-lg bg-sidebar-foreground/10 text-sidebar-foreground">
                     <Store className="size-4" />
                   </AvatarFallback>
                 </Avatar>
