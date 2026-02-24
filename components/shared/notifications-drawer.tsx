@@ -366,7 +366,7 @@ export function NotificationsDrawer({
                             </div>
                         ) : (
                             /* ── Notification List ─────────────── */
-                            <div className="py-2 divide-y divide-border/20">
+                            <div className="flex flex-col gap-2 px-4 py-3">
                                 {currentItems.map((notification) => {
                                     const config = ALERT_TYPE_CONFIG[notification.type];
                                     const Icon = config.icon;
@@ -375,9 +375,9 @@ export function NotificationsDrawer({
                                         <div
                                             key={notification.id}
                                             className={cn(
-                                                "group relative flex items-start gap-3.5 px-5 py-5 cursor-pointer transition-all duration-200",
-                                                "hover:bg-foreground/[0.03] active:bg-foreground/[0.06]",
-                                                !notification.read && "bg-primary/[0.02] dark:bg-primary/[0.04]"
+                                                "group relative flex items-start gap-3.5 px-4 py-4 rounded-xl cursor-pointer transition-all duration-200",
+                                                "bg-secondary/40 hover:bg-secondary/70 active:bg-secondary/90",
+                                                !notification.read && "bg-primary/[0.05] dark:bg-primary/[0.08] ring-1 ring-primary/10"
                                             )}
                                             onClick={() => markAsRead(notification.id)}
                                             role="button"
