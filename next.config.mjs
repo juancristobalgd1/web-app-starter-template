@@ -1,10 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  turbopack: {
-    root: "/Users/jc/PROGRAMACION/TEMPLATE/stockli/web-app-starter-template",
-  },
-
   images: {
     formats: ["image/avif", "image/webp"],
     remotePatterns: [],

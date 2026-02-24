@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Header } from "@/components/shared/header";
 import { AnimatedFab } from "@/components/ui/animated-fab";
-import { NotificationsDrawer } from "@/components/shared/notifications-drawer";
+import NotificationsDrawer from "@/components/shared/notifications-drawer";
 import { Plus, Star, Search, Bell } from "lucide-react";
 
 export default function PanelPage() {
@@ -47,8 +47,9 @@ export default function PanelPage() {
 
       {/* Notifications Drawer */}
       <NotificationsDrawer
-        open={notificationsOpen}
-        onOpenChange={setNotificationsOpen}
+        isOpen={notificationsOpen}
+        onClose={() => setNotificationsOpen(false)}
+        notifications={[]}
       />
 
       {/* FAB */}
