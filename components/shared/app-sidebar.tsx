@@ -122,7 +122,7 @@ export function AppSidebar({ activeTab, onTabChange }: AppSidebarProps) {
         <SidebarBody className="justify-between gap-10 text-sidebar-foreground [&_a]:text-sidebar-foreground [&_a:hover]:text-sidebar-accent-foreground [&_svg]:text-sidebar-foreground">
           <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden pb-24">
             <div className="hidden md:flex flex-col items-center px-2 pt-10 pb-12">
-              <Link href="/panel" className="flex items-center justify-center w-full">
+              <Link href="/panel" className="flex items-center justify-start w-full">
                 <AppLogo size={44} showText={sidebarOpen} className="transition-all duration-200" />
               </Link>
             </div>
@@ -136,13 +136,15 @@ export function AppSidebar({ activeTab, onTabChange }: AppSidebarProps) {
                   href={link.href}
                   onClick={() => onTabChange?.(link.tab as Tab)}
                   className={cn(
-                    "flex items-center justify-center gap-3 group/sidebar px-3 py-2.5 rounded-xl cursor-pointer transition-all duration-200 text-sm font-medium shadow-none",
+                    "flex items-center justify-start gap-4 group/sidebar py-2.5 rounded-xl cursor-pointer transition-all duration-200 text-sm font-medium shadow-none",
                     pathname === link.href
                       ? "bg-sidebar-accent/80 !text-sidebar-foreground font-semibold shadow-none ring-0"
                       : "!text-sidebar-foreground hover:bg-sidebar-accent/70 hover:!text-sidebar-foreground hover:shadow-none"
                   )}
                 >
-                  <div className="flex-shrink-0">{link.icon}</div>
+                  <div className="flex-shrink-0 w-11 flex items-center justify-center">
+                    {link.icon}
+                  </div>
                   {sidebarOpen && (
                     <span className="text-sm font-medium tracking-tight text-sidebar-foreground group-hover/sidebar:translate-x-1 transition duration-150 whitespace-pre">
                       {link.label}
@@ -155,20 +157,22 @@ export function AppSidebar({ activeTab, onTabChange }: AppSidebarProps) {
           <div className="p-2 mt-12">
             <Link
               href="/"
-              className="flex items-center justify-center gap-3 cursor-pointer hover:bg-sidebar-accent/50 rounded-lg p-2 transition-colors overflow-hidden"
+              className="flex items-center justify-start gap-4 cursor-pointer hover:bg-sidebar-accent/50 rounded-lg transition-colors overflow-hidden py-2"
             >
-              <Avatar className="h-8 w-8 rounded-lg border border-border">
-                {sidebarLogoUrl && (
-                  <AvatarImage
-                    src={sidebarLogoUrl}
-                    alt={sidebarBusinessName || "Logo"}
-                    className="object-cover"
-                  />
-                )}
-                <AvatarFallback className="rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                  <Store className="size-4" />
-                </AvatarFallback>
-              </Avatar>
+              <div className="w-11 flex items-center justify-center flex-shrink-0">
+                <Avatar className="h-8 w-8 rounded-lg border border-border">
+                  {sidebarLogoUrl && (
+                    <AvatarImage
+                      src={sidebarLogoUrl}
+                      alt={sidebarBusinessName || "Logo"}
+                      className="object-cover"
+                    />
+                  )}
+                  <AvatarFallback className="rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                    <Store className="size-4" />
+                  </AvatarFallback>
+                </Avatar>
+              </div>
               {sidebarOpen && (
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold text-sidebar-foreground">
