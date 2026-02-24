@@ -743,7 +743,7 @@ export default function NotificationsDrawer({
             </Drawer.Root >
             {/* Missing Supplier Dialog */}
             < AlertDialog open={missingSupplierDialogOpen} onOpenChange={setMissingSupplierDialogOpen} >
-                <AlertDialogContent className="rounded-2xl">
+                <AlertDialogContent className="rounded-2xl p-6">
                     <AlertDialogTitle className="text-lg font-semibold text-foreground">
                         {t("panel.notifications.configRequired")}
                     </AlertDialogTitle>
@@ -764,7 +764,7 @@ export default function NotificationsDrawer({
             </AlertDialog >
             {/* Clear Notifications Dialog */}
             < AlertDialog open={clearDialogOpen} onOpenChange={setClearDialogOpen} >
-                <AlertDialogContent className="rounded-2xl">
+                <AlertDialogContent className="rounded-2xl p-6">
                     <AlertDialogTitle className="text-lg font-semibold text-foreground">
                         {t("panel.notifications.clearConfirmTitle")}
                     </AlertDialogTitle>
