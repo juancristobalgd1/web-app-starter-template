@@ -119,7 +119,7 @@ export function AppSidebar({ activeTab, onTabChange }: AppSidebarProps) {
         setOpen={setSidebarOpen}
         animate={true}
       >
-        <SidebarBody className="justify-between gap-10 text-sidebar-foreground [&_a]:text-sidebar-foreground [&_a:hover]:text-sidebar-accent-foreground [&_svg]:text-sidebar-foreground">
+        <SidebarBody className="justify-between gap-10 text-sidebar-foreground pb-6 [&_a]:text-sidebar-foreground [&_a:hover]:text-sidebar-accent-foreground [&_svg]:text-sidebar-foreground">
           <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden pb-24">
             <div className="hidden md:flex flex-col items-center px-2 pt-10 pb-12">
               <Link href="/panel" className="flex items-center justify-start w-full">
@@ -154,7 +154,7 @@ export function AppSidebar({ activeTab, onTabChange }: AppSidebarProps) {
               ))}
             </div>
           </div>
-          <div className="p-2 mt-12">
+          <div className="p-2 mt-12" style={{ paddingBottom: '24px', marginBottom: '24px' }}>
             <Link
               href="/"
               className="flex items-center justify-start gap-4 cursor-pointer hover:bg-sidebar-accent/50 rounded-lg transition-colors overflow-hidden py-2"

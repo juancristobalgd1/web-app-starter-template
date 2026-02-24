@@ -80,7 +80,7 @@ export const DesktopSidebar = ({ className, children, ...props }: React.Componen
   return (
     <motion.div
       className={cn(
-        "h-full py-4 hidden md:flex md:flex-col w-[var(--sidebar-width)]",
+        "h-full pt-1 pb-1 hidden md:flex md:flex-col w-[var(--sidebar-width)]",
         "flex-shrink-0 px-0 relative z-[100] border-r border-sidebar-border",
         className
       )}
