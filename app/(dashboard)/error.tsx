@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { AlertTriangle, RotateCcw } from "lucide-react";
+import { AlertTriangle, RotateCcw, WifiOff } from "lucide-react";
 
 export default function DashboardError({
     error,
@@ -11,10 +11,58 @@ export default function DashboardError({
     error: Error & { digest?: string };
     reset: () => void;
 }) {
+    const [isOffline, setIsOffline] = useState(false);
+
     useEffect(() => {
+        // Check if the error is due to being offline
+        setIsOffline(!navigator.onLine);
+
+        const handleOnline = () => setIsOffline(false);
+        const handleOffline = () => setIsOffline(true);
+
+        window.addEventListener("online", handleOnline);
+        window.addEventListener("offline", handleOffline);
+
         // Log to your error tracking service (Sentry, LogRocket, etc.)
         console.error("[DashboardError]", error);
+
+        return () => {
+            window.removeEventListener("online", handleOnline);
+            window.removeEventListener("offline", handleOffline);
+        };
     }, [error]);
+
+    // Auto-retry when connection comes back
+    useEffect(() => {
+        if (!isOffline) return;
+        const handleOnline = () => {
+            // Small delay to let the connection stabilize
+            setTimeout(() => reset(), 500);
+        };
+        window.addEventListener("online", handleOnline);
+        return () => window.removeEventListener("online", handleOnline);
+    }, [isOffline, reset]);
+
+    if (isOffline) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-[60vh] px-6 text-center">
+                <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center mb-6">
+                    <WifiOff className="h-8 w-8 text-muted-foreground" />
+                </div>
+                <h2 className="text-xl font-bold text-foreground mb-2">
+                    Sin conexión
+                </h2>
+                <p className="text-sm text-muted-foreground max-w-sm mb-6">
+                    Comprueba tu conexión a internet e inténtalo de nuevo.
+                    La página se recargará automáticamente cuando vuelvas a estar en línea.
+                </p>
+                <Button variant="outline" onClick={() => reset()}>
+                    <RotateCcw className="mr-2 h-4 w-4" />
+                    Reintentar
+                </Button>
+            </div>
+        );
+    }
 
     return (
         <div className="flex flex-col items-center justify-center min-h-[60vh] px-6 text-center">

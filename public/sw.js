@@ -11,10 +11,10 @@
  * Push notifications: handler básico con soporte Android/iOS.
  */
 
-const APP_VERSION   = "v1.0.0";
-const STATIC_CACHE  = `app-static-${APP_VERSION}`;
+const APP_VERSION = "v1.0.0";
+const STATIC_CACHE = `app-static-${APP_VERSION}`;
 const DYNAMIC_CACHE = `app-dynamic-${APP_VERSION}`;
-const API_CACHE     = `app-api-${APP_VERSION}`;
+const API_CACHE = `app-api-${APP_VERSION}`;
 
 const STATIC_ASSETS = [
   "/",
@@ -28,8 +28,8 @@ const isStaticAsset = (url) =>
   url.pathname.match(/\.(js|css|woff2?|ttf|otf|svg|png|jpg|jpeg|gif|webp|avif|ico)$/) ||
   url.pathname.startsWith("/_next/static/");
 
-const isApiRequest       = (url) => url.pathname.startsWith("/api/");
-const isNavigationRequest= (req) => req.mode === "navigate";
+const isApiRequest = (url) => url.pathname.startsWith("/api/");
+const isNavigationRequest = (req) => req.mode === "navigate";
 
 /* ─── Install ─────────────────────────────────────────────────────────── */
 self.addEventListener("install", (event) => {
@@ -66,9 +66,7 @@ self.addEventListener("fetch", (event) => {
     return;
   }
   if (isNavigationRequest(event.request)) {
-    event.respondWith(
-      networkFirst(event.request, DYNAMIC_CACHE).catch(() => caches.match("/offline.html"))
-    );
+    event.respondWith(handleNavigation(event.request));
     return;
   }
   event.respondWith(staleWhileRevalidate(event.request, DYNAMIC_CACHE));
@@ -107,8 +105,36 @@ async function networkFirst(request, cacheName) {
   }
 }
 
+async function handleNavigation(request) {
+  try {
+    const response = await fetch(request);
+    if (response.ok) {
+      const cache = await caches.open(DYNAMIC_CACHE);
+      cache.put(request, response.clone());
+    }
+    return response;
+  } catch {
+    // Offline: try cached version of this exact URL
+    const cached = await caches.match(request);
+    if (cached) return cached;
+
+    // Try the root page cache as fallback for SPA-like navigation
+    const rootCached = await caches.match("/");
+    if (rootCached) return rootCached;
+
+    // Last resort: static offline page
+    const offlinePage = await caches.match("/offline.html");
+    if (offlinePage) return offlinePage;
+
+    return new Response(
+      "<html><body><h1>Sin conexión</h1><p>No hay contenido en caché disponible.</p></body></html>",
+      { status: 503, headers: { "Content-Type": "text/html" } }
+    );
+  }
+}
+
 async function staleWhileRevalidate(request, cacheName) {
-  const cache  = await caches.open(cacheName);
+  const cache = await caches.open(cacheName);
   const cached = await cache.match(request);
   const fetchPromise = fetch(request).then((r) => {
     if (r.ok) cache.put(request, r.clone());
@@ -126,17 +152,17 @@ self.addEventListener("sync", (event) => {
 
 async function syncPendingOps() {
   try {
-    const db    = await openDB();
-    const tx    = db.transaction("pendingOps", "readwrite");
-    const ops   = await getAllFromStore(tx.objectStore("pendingOps"));
-    let synced  = 0;
+    const db = await openDB();
+    const tx = db.transaction("pendingOps", "readwrite");
+    const ops = await getAllFromStore(tx.objectStore("pendingOps"));
+    let synced = 0;
 
     for (const op of ops) {
       try {
         const res = await fetch("/api/sync", {
-          method:  "POST",
+          method: "POST",
           headers: { "Content-Type": "application/json" },
-          body:    JSON.stringify(op),
+          body: JSON.stringify(op),
         });
         if (res.ok) {
           const del = db.transaction("pendingOps", "readwrite");
@@ -160,11 +186,11 @@ self.addEventListener("push", (event) => {
 
   event.waitUntil(
     self.registration.showNotification(data.title || "Mi App", {
-      body:             data.body || "Nueva notificación",
-      icon:             "/icons/icon-192x192.png",
-      badge:            "/icons/icon-192x192.png",
-      tag:              data.tag || "app-notification",
-      data:             { url: data.url || "/" },
+      body: data.body || "Nueva notificación",
+      icon: "/icons/icon-192x192.png",
+      badge: "/icons/icon-192x192.png",
+      tag: data.tag || "app-notification",
+      data: { url: data.url || "/" },
       requireInteraction: false,
     }).catch(console.error)
   );
@@ -183,8 +209,8 @@ self.addEventListener("notificationclick", (event) => {
 
 /* ─── Messages ────────────────────────────────────────────────────────── */
 self.addEventListener("message", (event) => {
-  if (event.data?.type === "SYNC_NOW")      syncPendingOps().then((r) => event.source?.postMessage({ type: "SYNC_COMPLETE", ...r }));
-  if (event.data?.type === "SKIP_WAITING")  self.skipWaiting();
+  if (event.data?.type === "SYNC_NOW") syncPendingOps().then((r) => event.source?.postMessage({ type: "SYNC_COMPLETE", ...r }));
+  if (event.data?.type === "SKIP_WAITING") self.skipWaiting();
 });
 
 /* ─── IndexedDB Helpers ───────────────────────────────────────────────── */
@@ -192,14 +218,14 @@ function openDB() {
   return new Promise((res, rej) => {
     const req = indexedDB.open("web-app-starter-db", 1);
     req.onsuccess = () => res(req.result);
-    req.onerror   = () => rej(req.error);
+    req.onerror = () => rej(req.error);
   });
 }
 function getAllFromStore(store) {
   return new Promise((res, rej) => {
     const req = store.getAll();
     req.onsuccess = () => res(req.result);
-    req.onerror   = () => rej(req.error);
+    req.onerror = () => rej(req.error);
   });
 }
 async function notifyClients(type, data) {

@@ -12,7 +12,6 @@
   );
 
   window.addEventListener("load", () => {
-    if (isLocalhost) return;
     registerSW("/sw.js");
 
     navigator.serviceWorker.addEventListener("message", (event) => {
@@ -22,7 +21,7 @@
     });
   });
 
-  window.addEventListener("online",  () => handleConnection(true));
+  window.addEventListener("online", () => handleConnection(true));
   window.addEventListener("offline", () => handleConnection(false));
 
   function handleConnection(online) {
@@ -35,14 +34,14 @@
       .then((reg) => {
         if ("sync" in reg) return reg.sync.register("sync-pending-ops");
       })
-      .catch(() => {});
+      .catch(() => { });
   }
 
   function registerSW(url) {
     navigator.serviceWorker.register(url)
       .then((reg) => {
-        reg.update().catch(() => {});
-        setInterval(() => reg.update().catch(() => {}), 60 * 60 * 1000);
+        reg.update().catch(() => { });
+        setInterval(() => reg.update().catch(() => { }), 60 * 60 * 1000);
 
         reg.onupdatefound = () => {
           const sw = reg.installing;
