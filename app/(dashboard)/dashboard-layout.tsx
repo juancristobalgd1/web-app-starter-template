@@ -52,7 +52,7 @@ export default function DashboardLayout({
         <AppSidebar activeTab={activeTab} onTabChange={handleTabChange} />
 
         <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
-          <main className="flex-1 overflow-x-hidden overflow-y-auto scroll-momentum px-12 py-5 md:px-14 md:py-6 pb-[calc(var(--bottom-nav-height)+env(safe-area-inset-bottom))] md:pb-6">
+          <main className="flex-1 overflow-x-hidden overflow-y-auto scroll-momentum px-4 py-5 md:px-14 md:pl-24 lg:pl-32 lg:pr-20 md:py-8 pb-[calc(var(--bottom-nav-height)+env(safe-area-inset-bottom))] md:pb-8">
             {children}
           </main>
         </div>

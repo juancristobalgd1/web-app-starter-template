@@ -183,7 +183,7 @@ export const Header: React.FC<HeaderProps> = ({
             )}
             style={scrollGlassStyle}
         >
-            <div className={cn("flex w-full min-w-0 max-w-full items-center justify-between gap-2 px-4 h-[var(--navbar-height)]", containerClassName)}>
+            <div className={cn("flex w-full min-w-0 max-w-full items-center justify-between gap-2 px-4 md:px-8 lg:px-12 h-[var(--navbar-height)]", containerClassName)}>
                 <div className="flex min-w-0 flex-1 items-center">
                     {onBack && (
                         <Button
