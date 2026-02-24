@@ -336,7 +336,7 @@ export default function NotificationsDrawer({
                 <Drawer.Portal>
                     <Drawer.Overlay className="fixed inset-0 bg-black/40 z-[55]" />
                     <Drawer.Content
-                        className="right-2 top-2 bottom-2 fixed z-[60] outline-none w-[calc(100%-1rem)] sm:w-[420px] flex"
+                        className="right-2 left-2 top-2 bottom-2 fixed z-[60] outline-none sm:left-auto sm:w-[420px] flex"
                         style={{ "--initial-transform": "calc(100% + 8px)" } as React.CSSProperties}
                         aria-describedby={undefined}
                     >
