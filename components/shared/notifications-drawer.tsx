@@ -336,7 +336,7 @@ export default function NotificationsDrawer({
                 <Drawer.Portal>
                     <Drawer.Overlay className="fixed inset-0 bg-black/40 z-[55]" />
                     <Drawer.Content
-                        className="right-2 left-2 top-2 bottom-2 fixed z-[60] outline-none sm:left-auto sm:w-[420px] flex"
+                        className="right-2 top-2 bottom-2 fixed z-[60] outline-none w-[calc(100%-1rem)] sm:w-[420px] flex"
                         style={{ "--initial-transform": "calc(100% + 8px)" } as React.CSSProperties}
                         aria-describedby={undefined}
                     >
@@ -345,7 +345,7 @@ export default function NotificationsDrawer({
                             {/* Header */}
                             <div
                                 data-system-bar
-                                className="px-5 pt-5 pb-4 border-b border-gray-200 dark:border-white/10"
+                                className="px-6 pt-6 pb-4 border-b border-gray-200 dark:border-white/10"
                             >
                                 <div className="flex justify-between items-center">
                                     {/* Tabs */}
@@ -420,7 +420,7 @@ export default function NotificationsDrawer({
                                 </div>
                                 {/* Filters - Only show for notifications tab */}
                                 {activeTab === "notifications" && (
-                                    <div className="flex items-center gap-2 mt-3 overflow-x-auto no-scrollbar pb-2">
+                                    <div className="flex items-center gap-2 mt-3 overflow-x-auto no-scrollbar pb-2 -mx-1 px-1">
                                         {filters.map((filter) => {
                                             const count = filter.id === "all"
                                                 ? notifications.length
@@ -457,7 +457,7 @@ export default function NotificationsDrawer({
                                 )}
                             </div>
                             {/* Content */}
-                            <div className="flex-1 overflow-y-auto">
+                            <div className="flex-1 overflow-y-auto px-1">
                                 {activeTab === "notifications" ? (
                                     // Notifications Content
                                     filteredNotifications.length === 0 ? (
