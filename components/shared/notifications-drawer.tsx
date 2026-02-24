@@ -345,7 +345,7 @@ export default function NotificationsDrawer({
                             {/* Header */}
                             <div
                                 data-system-bar
-                                className="px-5 pt-5 pb-4 border-b border-border/40"
+                                className="px-5 pt-5 pb-4 border-b border-gray-200 dark:border-white/10"
                             >
                                 <div className="flex justify-between items-center">
                                     {/* Tabs */}
