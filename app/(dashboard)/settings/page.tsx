@@ -222,44 +222,6 @@ export default function SettingsPage() {
           ))}
         </div>
       </div>
-
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          minHeight: "100%",
-          backgroundColor: "var(--background)",
-          color: "var(--foreground)",
-          fontFamily: "var(--font-sans, system-ui, sans-serif)",
-        }}
-      >
-        <div style={{ flex: 1, width: "100%", padding: "8px 0 80px" }}>
-          {SECTIONS.map((section) => (
-            <div key={section.title ?? "top"} style={{ marginBottom: 24 }}>
-              {section.title && (
-                <div
-                  style={{
-                    fontSize: 12,
-                    fontWeight: 600,
-                    letterSpacing: "0.6px",
-                    textTransform: "uppercase",
-                    color: "var(--muted-foreground)",
-                    opacity: 0.6,
-                    padding: "0 16px",
-                    marginBottom: 4,
-                    marginTop: 8,
-                  }}
-                >
-                  {section.title}
-                </div>
-              )}
-              {section.items.map((item) => (
-                <SettingsRow key={item.label} {...item} />
-              ))}
-            </div>
-          ))}
-        </div>
-      </div>
     </>
   );
 }
