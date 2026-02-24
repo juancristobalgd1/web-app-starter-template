@@ -120,13 +120,16 @@ export function AppSidebar({ activeTab, onTabChange }: AppSidebarProps) {
         animate={true}
       >
         <SidebarBody className="justify-between gap-10 text-sidebar-foreground [&_a]:text-sidebar-foreground [&_a:hover]:text-sidebar-accent-foreground [&_svg]:text-sidebar-foreground">
-          <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
-            <div className="hidden md:flex flex-col items-center px-2 pt-10 pb-40">
+          <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden pb-24">
+            <div className="hidden md:flex flex-col items-center px-2 pt-10 pb-12">
               <Link href="/panel" className="flex items-center justify-center w-full">
                 <AppLogo size={44} showText={sidebarOpen} className="transition-all duration-200" />
               </Link>
             </div>
-            <div className="mt-12 flex flex-col gap-2.5 px-2">
+            <div
+              className="flex flex-col gap-2.5 px-2 pt-8 mt-32 mb-28"
+              style={{ marginTop: "128px" }}
+            >
               {navigationLinks.map((link, idx) => (
                 <Link
                   key={idx}
@@ -149,7 +152,7 @@ export function AppSidebar({ activeTab, onTabChange }: AppSidebarProps) {
               ))}
             </div>
           </div>
-          <div className="p-2">
+          <div className="p-2 mt-12">
             <Link
               href="/"
               className="flex items-center gap-3 cursor-pointer hover:bg-sidebar-accent/50 rounded-lg p-2 transition-colors overflow-hidden"
