@@ -12,7 +12,6 @@ import {
     Bell,
     X,
     CheckCheck,
-    ShoppingCart,
     MessageSquare,
     AlertTriangle,
     Info,
