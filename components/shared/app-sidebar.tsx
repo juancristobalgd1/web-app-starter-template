@@ -136,7 +136,7 @@ export function AppSidebar({ activeTab, onTabChange }: AppSidebarProps) {
                   href={link.href}
                   onClick={() => onTabChange?.(link.tab as Tab)}
                   className={cn(
-                    "flex items-center justify-start gap-3 group/sidebar px-3 py-2.5 rounded-xl cursor-pointer transition-all duration-200 text-sm font-medium shadow-none",
+                    "flex items-center justify-center gap-3 group/sidebar px-3 py-2.5 rounded-xl cursor-pointer transition-all duration-200 text-sm font-medium shadow-none",
                     pathname === link.href
                       ? "bg-sidebar-accent/80 !text-sidebar-foreground font-semibold shadow-none ring-0"
                       : "!text-sidebar-foreground hover:bg-sidebar-accent/70 hover:!text-sidebar-foreground hover:shadow-none"
@@ -155,7 +155,7 @@ export function AppSidebar({ activeTab, onTabChange }: AppSidebarProps) {
           <div className="p-2 mt-12">
             <Link
               href="/"
-              className="flex items-center gap-3 cursor-pointer hover:bg-sidebar-accent/50 rounded-lg p-2 transition-colors overflow-hidden"
+              className="flex items-center justify-center gap-3 cursor-pointer hover:bg-sidebar-accent/50 rounded-lg p-2 transition-colors overflow-hidden"
             >
               <Avatar className="h-8 w-8 rounded-lg border border-border">
                 {sidebarLogoUrl && (
