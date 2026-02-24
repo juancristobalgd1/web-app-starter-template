@@ -336,16 +336,16 @@ export default function NotificationsDrawer({
                 <Drawer.Portal>
                     <Drawer.Overlay className="fixed inset-0 bg-black/40 z-[55]" />
                     <Drawer.Content
-                        className="right-0 sm:right-2 top-0 sm:top-2 bottom-0 sm:bottom-2 fixed z-[60] outline-none w-full sm:w-[420px] flex"
+                        className="right-2 top-2 bottom-2 fixed z-[60] outline-none w-[calc(100%-1rem)] sm:w-[420px] flex"
                         style={{ "--initial-transform": "calc(100% + 8px)" } as React.CSSProperties}
                         aria-describedby={undefined}
                     >
                         <Drawer.Title className="sr-only">{t("panel.notifications.title")}</Drawer.Title>
-                        <div className="h-full w-full grow flex flex-col sm:rounded-2xl overflow-hidden" style={drawerGlassStyle}>
+                        <div className="h-full w-full grow flex flex-col rounded-3xl overflow-hidden" style={drawerGlassStyle}>
                             {/* Header */}
                             <div
                                 data-system-bar
-                                className="px-4 py-3 border-b border-border/40"
+                                className="px-5 pt-5 pb-4 border-b border-border/40"
                             >
                                 <div className="flex justify-between items-center">
                                     {/* Tabs */}
@@ -353,7 +353,7 @@ export default function NotificationsDrawer({
                                         <button
                                             onClick={() => setActiveTab("notifications")}
                                             className={cn(
-                                                "px-3 py-1.5 rounded-lg text-base font-semibold transition-all",
+                                                "px-3 py-1.5 rounded-xl text-lg font-bold transition-all",
                                                 activeTab === "notifications"
                                                     ? "text-foreground"
                                                     : "text-muted-foreground/50 hover:text-muted-foreground hover:bg-muted/50"
@@ -365,7 +365,7 @@ export default function NotificationsDrawer({
                                         <button
                                             onClick={() => setActiveTab("messages")}
                                             className={cn(
-                                                "px-3 py-1.5 rounded-lg text-base font-semibold transition-all flex items-center gap-1.5",
+                                                "px-3 py-1.5 rounded-xl text-lg font-bold transition-all flex items-center gap-1.5",
                                                 activeTab === "messages"
                                                     ? "text-foreground"
                                                     : "text-muted-foreground/50 hover:text-muted-foreground hover:bg-muted/50"
@@ -420,7 +420,7 @@ export default function NotificationsDrawer({
                                 </div>
                                 {/* Filters - Only show for notifications tab */}
                                 {activeTab === "notifications" && (
-                                    <div className="flex items-center gap-2 mt-3 overflow-x-auto no-scrollbar pb-1">
+                                    <div className="flex items-center gap-2 mt-3 overflow-x-auto no-scrollbar pb-2">
                                         {filters.map((filter) => {
                                             const count = filter.id === "all"
                                                 ? notifications.length
@@ -434,7 +434,7 @@ export default function NotificationsDrawer({
                                                     key={filter.id}
                                                     onClick={() => setActiveFilter(filter.id)}
                                                     className={cn(
-                                                        "px-3 py-1.5 rounded-full text-xs font-medium transition-all whitespace-nowrap flex items-center gap-1.5",
+                                                        "px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex items-center gap-1.5",
                                                         isActive
                                                             ? "text-primary-foreground"
                                                             : "text-muted-foreground hover:text-foreground"
