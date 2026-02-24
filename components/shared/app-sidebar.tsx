@@ -27,8 +27,7 @@ import { usePermission } from "../../hooks/use-permission";
 import { useTeamBusiness } from "../../hooks/use-team-business";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AppLogo } from "@/components/shared/app-logo";
-
-type Tab = "panel" | "lists" | "documents" | "settings";
+import type { Tab } from "@/types/navigation";
 
 interface AppSidebarProps {
   activeTab?: Tab;

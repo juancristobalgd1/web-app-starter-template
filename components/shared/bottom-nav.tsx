@@ -1,15 +1,14 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { LiquidGlass } from "@/components/ui/satin-liquid-glass_legacy";
+import { LiquidGlass } from "@/components/ui/satin-liquid-glass";
 import {
   LayoutDashboard,
   List,
   FileText,
   Settings,
 } from "lucide-react";
-
-type Tab = "panel" | "lists" | "documents" | "settings";
+import type { Tab } from "@/types/navigation";
 
 const NAV_ITEMS: {
   tab: Tab;

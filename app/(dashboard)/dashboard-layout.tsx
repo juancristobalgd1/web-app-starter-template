@@ -6,23 +6,10 @@ import { useRouter, usePathname } from "next/navigation";
 import { AppSidebar } from "@/components/shared/app-sidebar";
 import { BottomNav } from "@/components/shared/bottom-nav";
 import { AuthGuard } from "@/components/shared/auth-guard";
+import type { Tab } from "@/types/navigation";
+import { ROUTE_TO_TAB, TAB_TO_ROUTE } from "@/types/navigation";
 
-type Tab = "panel" | "lists" | "documents" | "settings";
 
-const ROUTE_TO_TAB: Record<string, Tab> = {
-  "/panel": "panel",
-  "/": "panel",
-  "/lists": "lists",
-  "/documents": "documents",
-  "/settings": "settings",
-};
-
-const TAB_TO_ROUTE: Record<Tab, string> = {
-  panel: "/panel",
-  lists: "/lists",
-  documents: "/documents",
-  settings: "/settings",
-};
 
 export default function DashboardLayout({
   children,

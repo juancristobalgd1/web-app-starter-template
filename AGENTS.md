@@ -42,6 +42,7 @@ npm run lint
 - `components/shared/` — App-specific shared components (BottomNav, AppSidebar, AuthGuard)
 - `components/features/` — Feature-specific components grouped by domain
 - `components/providers/` — React context providers
+- `types/` — Centralized TypeScript types (navigation, notifications)
 
 ### Key Patterns
 
@@ -55,6 +56,18 @@ const buttonVariants = cva([...baseClasses], { variants: {...}, defaultVariants:
 **Responsive Navigation**: 
 - Desktop (md+): `AppSidebar` component
 - Mobile: `BottomNav` component with glass effect
+
+**Shared Types**:
+- `types/navigation.ts` — `Tab` type and route mappings (single source of truth)
+- `types/notifications.ts` — `Product`, `Notification`, `AdminMessage` types
+
+**Error Handling**:
+- `app/global-error.tsx` — Root-level error boundary
+- `app/(dashboard)/error.tsx` — Dashboard error boundary
+- `app/not-found.tsx` — Custom 404 page
+- `app/(dashboard)/*/loading.tsx` — Suspense skeletons per route
+
+**Glass Effect**: Single implementation in `components/ui/satin-liquid-glass.tsx` — includes `LiquidGlass` component, `useLiquidGlass` hook, and pre-styled variants (`GlassCard`, `GlassButton`, etc.)
 
 ### Offline Support
 

@@ -22,7 +22,7 @@ import { Store } from "lucide-react";
 import Image from "next/image";
 
 import { Skeleton } from "../ui/skeleton";
-import { useLiquidGlass } from "../ui/satin-liquid-glass_legacy";
+import { useLiquidGlass } from "../ui/satin-liquid-glass";
 import { ToggleTheme } from "../ui/toggle-theme";
 import { useCurrentUserProfile } from "../../hooks/use-current-user-profile";
 

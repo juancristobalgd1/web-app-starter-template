@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { GlassCard } from "@/components/ui/satin-liquid-glass_legacy";
+import { GlassCard } from "@/components/ui/satin-liquid-glass";
 import { Mail, Lock, User, Eye, EyeOff } from "lucide-react";
 import { useAuth } from "@/components/providers/auth-provider";
 import { useRouter } from "next/navigation";

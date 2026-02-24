@@ -24,31 +24,11 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { useLiquidGlass } from "@/components/ui/satin-liquid-glass";
-export interface Product {
-    id: string;
-    name: string;
-    quantity: number;
-    demandCategory?: string;
-    expirationDate?: string;
-    supplierName?: string;
-    requiredQty?: number;
-    unitOfMeasure?: string;
-    price?: number;
-    image?: string | null;
-}
-export interface Notification {
-    listId: string;
-    listName: string;
-    products: Product[];
-    type?: "low_stock" | "expiration" | "order_overdue" | "document_update";
-}
-export interface AdminMessage {
-    id: string;
-    title: string;
-    message: string;
-    createdAt: string;
-    read: boolean;
-}
+import type { Product, Notification, AdminMessage, NotificationTabType, NotificationFilterType } from "@/types/notifications";
+
+// Re-export types for backward compatibility
+export type { Product, Notification, AdminMessage } from "@/types/notifications";
+
 interface NotificationsDrawerProps {
     isOpen: boolean;
     onClose: () => void;
@@ -76,8 +56,6 @@ interface NotificationsDrawerProps {
     onMarkNotificationAsRead?: (notificationId: string) => void;
     onMarkAllAsRead?: () => void;
 }
-type TabType = "notifications" | "messages";
-type FilterType = "all" | "low_stock" | "expiration" | "order_overdue" | "document_update";
 function getNotificationTitle(notification: Notification, t: any): string {
     if (notification.type === "expiration") {
         return t("panel.notifications.expirationAt", { name: notification.listName });
@@ -246,15 +224,15 @@ export default function NotificationsDrawer({
     onMarkAllAsRead,
 }: NotificationsDrawerProps) {
     const { t, currentLanguage } = useI18n();
-    const [activeTab, setActiveTab] = useState<TabType>("notifications");
-    const [activeFilter, setActiveFilter] = useState<FilterType>("all");
+    const [activeTab, setActiveTab] = useState<NotificationTabType>("notifications");
+    const [activeFilter, setActiveFilter] = useState<NotificationFilterType>("all");
     const [missingSupplierDialogOpen, setMissingSupplierDialogOpen] = useState(false);
     const [clearDialogOpen, setClearDialogOpen] = useState(false);
     const [missingSupplierContext, setMissingSupplierContext] = useState<{
         listName: string;
         count: number;
     } | null>(null);
-    const filters: { id: FilterType; label: string }[] = [
+    const filters: { id: NotificationFilterType; label: string }[] = [
         { id: "all", label: t("panel.notifications.all") },
         { id: "low_stock", label: t("panel.notifications.stock") },
         { id: "expiration", label: t("panel.notifications.expiration") },
