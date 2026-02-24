@@ -1,11 +1,14 @@
 "use client";
 
+import { useState } from "react";
 import { Header } from "@/components/shared/header";
 import { AnimatedFab } from "@/components/ui/animated-fab";
-import { GlassCard } from "@/components/ui/satin-liquid-glass_legacy";
+import { NotificationsDrawer } from "@/components/shared/notifications-drawer";
 import { Plus, Star, Search, Bell } from "lucide-react";
 
 export default function PanelPage() {
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
+
   return (
     <div className="flex flex-col min-h-full">
       <Header
@@ -19,7 +22,7 @@ export default function PanelPage() {
           },
           {
             icon: <Bell className="w-5 h-5" />,
-            onClick: () => console.log("Notificaciones"),
+            onClick: () => setNotificationsOpen(true),
             ariaLabel: "Notificaciones",
             badge: 62,
           },
@@ -42,6 +45,12 @@ export default function PanelPage() {
         </div>
       </div>
 
+      {/* Notifications Drawer */}
+      <NotificationsDrawer
+        open={notificationsOpen}
+        onOpenChange={setNotificationsOpen}
+      />
+
       {/* FAB */}
       <AnimatedFab
         items={[
@@ -61,3 +70,4 @@ export default function PanelPage() {
     </div>
   );
 }
+
