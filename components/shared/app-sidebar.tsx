@@ -119,15 +119,18 @@ export function AppSidebar({ activeTab, onTabChange }: AppSidebarProps) {
         setOpen={setSidebarOpen}
         animate={true}
       >
-        <SidebarBody className="justify-between gap-10 text-sidebar-foreground pb-6 [&_a]:text-sidebar-foreground [&_a:hover]:text-sidebar-accent-foreground [&_svg]:text-sidebar-foreground">
+        <SidebarBody
+          data-sidebar="sidebar"
+          className="justify-between gap-10 text-sidebar-foreground pb-6 [&_a]:text-sidebar-foreground [&_a:hover]:text-sidebar-accent-foreground [&_svg]:text-sidebar-foreground"
+        >
           <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden pb-24">
-            <div className="hidden md:flex flex-col items-center px-2 pt-10 pb-12">
+            <div className="hidden md:flex flex-col items-center pt-10 pb-12 w-full">
               <Link href="/panel" className="flex items-center justify-center w-full">
                 <AppLogo size={44} showText={sidebarOpen} className="transition-all duration-200" />
               </Link>
             </div>
             <div
-              className="flex flex-col gap-4 px-2 pt-8 mt-32 mb-28"
+              className="flex flex-col gap-1 px-2 pt-8 mt-32 mb-28"
               style={{ marginTop: "128px" }}
             >
               {navigationLinks.map((link, idx) => (
@@ -136,7 +139,7 @@ export function AppSidebar({ activeTab, onTabChange }: AppSidebarProps) {
                   href={link.href}
                   onClick={() => onTabChange?.(link.tab as Tab)}
                   className={cn(
-                    "flex items-center justify-start gap-4 group/sidebar py-2.5 rounded-xl cursor-pointer transition-all duration-200 text-sm font-medium shadow-none",
+                    "flex items-center justify-start gap-4 group/sidebar !py-4 rounded-xl cursor-pointer transition-all duration-200 text-sm font-medium shadow-none",
                     pathname === link.href
                       ? "bg-sidebar-accent/80 !text-sidebar-foreground font-semibold shadow-none ring-0"
                       : "!text-sidebar-foreground hover:bg-sidebar-accent/70 hover:!text-sidebar-foreground hover:shadow-none"

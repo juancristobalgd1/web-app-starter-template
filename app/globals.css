@@ -15,6 +15,25 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+/* Force standard colors for sidebar links and icons to prevent red hover/active states */
+[data-sidebar="sidebar"] a,
+[data-sidebar="sidebar"] button,
+.group\/sidebar {
+  color: var(--sidebar-foreground) !important;
+}
+
+[data-sidebar="sidebar"] a:hover,
+[data-sidebar="sidebar"] button:hover,
+.group\/sidebar:hover {
+  background-color: var(--sidebar-accent) !important;
+  color: var(--sidebar-accent-foreground) !important;
+}
+
+[data-sidebar="sidebar"] [data-active="true"] {
+  background-color: var(--sidebar-accent) !important;
+  color: var(--sidebar-accent-foreground) !important;
+}
+
 /* =====================================================================
    WEB APP STARTER — Global Styles
    Basado en la arquitectura de stockli/vyyq
