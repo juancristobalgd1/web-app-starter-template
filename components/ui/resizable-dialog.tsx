@@ -412,6 +412,7 @@ const DesktopDialog = ({
   const [position, setPosition] = React.useState({ x: 0, y: 0 })
   const [isDragging, setIsDragging] = React.useState(false)
   const [zIndex, setZIndex] = React.useState(baseZIndex)
+  const { style: glassStyle } = useLiquidGlass({ intensity: "medium", satin: true })
 
   React.useEffect(() => {
     if (isOpen) {
@@ -451,7 +452,7 @@ const DesktopDialog = ({
             handle=".drag-handle"
             bounds="parent"
             className={cn(
-              "flex flex-col w-full max-w-lg border border-border bg-background shadow-2xl duration-200 sm:rounded-2xl max-h-[95vh] overflow-hidden",
+              "flex flex-col w-full max-w-lg border-0 bg-transparent shadow-2xl duration-200 sm:rounded-2xl max-h-[95vh] overflow-hidden",
               isDragging && "cursor-grabbing scale-[1.02]",
               className,
             )}
@@ -459,7 +460,8 @@ const DesktopDialog = ({
             {/* Header */}
             <div
               data-system-bar
-              className="flex items-center justify-between px-4 py-3 border-b border-border flex-shrink-0 drag-handle cursor-grab active:cursor-grabbing rounded-t-2xl bg-muted/40 transition-colors duration-300"
+              className="flex items-center justify-between px-4 py-4 border-b-0 flex-shrink-0 drag-handle cursor-grab active:cursor-grabbing rounded-t-2xl transition-colors duration-300"
+              style={glassStyle}
             >
               <div className="flex items-center gap-2.5">
                 <GripVertical className="h-4 w-4 text-muted-foreground/60 flex-shrink-0" />
@@ -476,14 +478,14 @@ const DesktopDialog = ({
               role="document"
               aria-label={productName || title || "Modal content"}
               tabIndex={-1}
-              className="overflow-y-auto flex-1 px-6 py-4 bg-background group/dialog-content"
+              className="overflow-y-auto flex-1 px-6 py-4 bg-background shadow-lg group/dialog-content"
               data-view="dialog"
             >
               {children}
             </div>
             {/* Footer */}
             {footer && (
-              <div className="px-4 py-3 border-t border-border flex-shrink-0 rounded-b-2xl bg-background">
+              <div className="px-4 py-3 border-t border-border flex-shrink-0 rounded-b-2xl bg-background shadow-lg">
                 <div className="flex justify-center gap-2">{footer}</div>
               </div>
             )}
@@ -516,6 +518,7 @@ const MobileDrawer = ({
   onAnimationEnd?: (open: boolean) => void
 }) => {
   const [zIndex, setZIndex] = React.useState(baseZIndex)
+  const { style: glassStyle } = useLiquidGlass({ intensity: "medium", satin: true })
 
   React.useEffect(() => {
     if (isOpen) {
@@ -539,19 +542,22 @@ const MobileDrawer = ({
         />
         <Drawer.Content
           className={cn(
-            "bg-background flex flex-col rounded-t-2xl fixed bottom-0 left-0 right-0 h-auto max-h-[100dvh] border border-b-0 border-border",
+            "bg-background flex flex-col rounded-t-2xl fixed bottom-0 left-0 right-0 h-auto max-h-[100dvh]",
             "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 duration-300 ease-in-out",
             className,
           )}
           style={{ zIndex }}
           aria-describedby={undefined}
         >
-          {/* Handle + Header */}
-          <div className="flex flex-col rounded-t-2xl bg-background flex-shrink-0">
+          {/* Handle + Header — todo dentro del bloque glass */}
+          <div
+            className="flex flex-col rounded-t-2xl flex-shrink-0"
+            style={glassStyle}
+          >
             {/* Drag handle pill */}
-            <div className="mx-auto w-10 h-1 rounded-full bg-muted-foreground/25 mt-3 mb-0" />
+            <div className="mx-auto w-12 h-1.5 rounded-full bg-zinc-300/50 mt-3 mb-2" />
             {/* Header row */}
-            <div className="flex items-center justify-between px-4 py-3 border-b border-border">
+            <div className="flex items-center justify-between px-4 pb-4">
               <div className="flex items-center gap-2">
                 {productImage && (
                   productImage.startsWith("data:application/pdf") ? (
