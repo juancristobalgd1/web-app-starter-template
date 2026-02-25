@@ -356,6 +356,40 @@ const FullscreenView = ({
   )
 }
 
+const WindowControls = ({
+  onMaximize,
+  onMinimize,
+  onClose,
+}: {
+  onMaximize: () => void
+  onMinimize: () => void
+  onClose: () => void
+}) => (
+  <div className="flex items-center gap-1.5">
+    <button
+      onClick={(e) => { e.stopPropagation(); onMaximize() }}
+      aria-label="Pantalla completa"
+      className="h-7 w-7 rounded-full border border-border bg-background hover:bg-muted shadow-sm flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+    >
+      <Maximize className="h-3.5 w-3.5" />
+    </button>
+    <button
+      onClick={(e) => { e.stopPropagation(); onMinimize() }}
+      aria-label="Minimizar"
+      className="h-7 w-7 rounded-full border border-border bg-background hover:bg-muted shadow-sm flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+    >
+      <Minus className="h-3.5 w-3.5" />
+    </button>
+    <button
+      onClick={(e) => { e.stopPropagation(); onClose() }}
+      aria-label="Cerrar"
+      className="h-7 w-7 rounded-full border border-border bg-background hover:bg-muted shadow-sm flex items-center justify-center text-muted-foreground hover:text-destructive transition-colors"
+    >
+      <X className="h-3.5 w-3.5" />
+    </button>
+  </div>
+)
+
 const DesktopDialog = ({
   children,
   isOpen,
@@ -378,10 +412,6 @@ const DesktopDialog = ({
   const [position, setPosition] = React.useState({ x: 0, y: 0 })
   const [isDragging, setIsDragging] = React.useState(false)
   const [zIndex, setZIndex] = React.useState(baseZIndex)
-  const { style: glassStyle } = useLiquidGlass({ intensity: "medium", satin: true })
-  const { style: glassIconStyle } = useLiquidGlass({ intensity: "subtle", variant: "natural" })
-  const { style: footerGlassStyle } = useLiquidGlass({ intensity: "subtle", variant: "natural" })
-  const footerWithGlass = React.useMemo(() => applyGlassToFooterButtons(footer, footerGlassStyle), [footer, footerGlassStyle])
 
   React.useEffect(() => {
     if (isOpen) {
@@ -421,76 +451,40 @@ const DesktopDialog = ({
             handle=".drag-handle"
             bounds="parent"
             className={cn(
-              "flex flex-col w-full max-w-lg border-0 bg-transparent shadow-2xl duration-200 sm:rounded-2xl max-h-[95vh] overflow-hidden",
-              isDragging && "cursor-grabbing shadow-2xl scale-105",
+              "flex flex-col w-full max-w-lg border border-border bg-background shadow-2xl duration-200 sm:rounded-2xl max-h-[95vh] overflow-hidden",
+              isDragging && "cursor-grabbing scale-[1.02]",
               className,
             )}
           >
+            {/* Header */}
             <div
               data-system-bar
-              className="flex items-center justify-between p-4 border-b-0 flex-shrink-0 drag-handle cursor-grab active:cursor-grabbing rounded-t-2xl transition-colors duration-300"
-              style={glassStyle}
+              className="flex items-center justify-between px-4 py-3 border-b border-border flex-shrink-0 drag-handle cursor-grab active:cursor-grabbing rounded-t-2xl bg-muted/40 transition-colors duration-300"
             >
-              <div className="flex items-center gap-3">
-                <GripVertical className="h-5 w-5 text-muted-foreground" />
-                <DialogPrimitive.Title className="font-bold text-lg flex items-center gap-2 text-foreground">
+              <div className="flex items-center gap-2.5">
+                <GripVertical className="h-4 w-4 text-muted-foreground/60 flex-shrink-0" />
+                <DialogPrimitive.Title className="font-bold text-base flex items-center gap-2 text-foreground">
                   <ProductHeader productImage={productImage} productName={productName} title={title} />
                 </DialogPrimitive.Title>
               </div>
-              <div className="flex items-center gap-1" onPointerDown={(e) => e.stopPropagation()} onMouseDown={(e) => e.stopPropagation()}>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8 text-muted-foreground hover:text-foreground transition-colors bg-transparent hover:bg-transparent"
-                  style={glassIconStyle}
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    onMaximize()
-                  }}
-                  aria-label="Pantalla completa"
-                >
-                  <Maximize className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8 text-muted-foreground hover:text-foreground transition-colors bg-transparent hover:bg-transparent"
-                  style={glassIconStyle}
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    onMinimize()
-                  }}
-                  aria-label="Minimizar"
-                >
-                  <Minus className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8 text-muted-foreground hover:text-destructive transition-colors bg-transparent hover:bg-transparent"
-                  style={glassIconStyle}
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    onClose()
-                  }}
-                  aria-label="Cerrar"
-                >
-                  <X className="h-4 w-4" />
-                </Button>
+              <div onPointerDown={(e) => e.stopPropagation()} onMouseDown={(e) => e.stopPropagation()}>
+                <WindowControls onMaximize={onMaximize} onMinimize={onMinimize} onClose={onClose} />
               </div>
             </div>
+            {/* Content */}
             <div
               role="document"
               aria-label={productName || title || "Modal content"}
               tabIndex={-1}
-              className="overflow-y-auto flex-1 px-6 py-4 bg-background shadow-lg group/dialog-content"
+              className="overflow-y-auto flex-1 px-6 py-4 bg-background group/dialog-content"
               data-view="dialog"
             >
               {children}
             </div>
-            {footerWithGlass && (
-              <div className="p-4 border-t border-border flex-shrink-0 rounded-b-2xl bg-background shadow-lg">
-                <div className="flex justify-center gap-2">{footerWithGlass}</div>
+            {/* Footer */}
+            {footer && (
+              <div className="px-4 py-3 border-t border-border flex-shrink-0 rounded-b-2xl bg-background">
+                <div className="flex justify-center gap-2">{footer}</div>
               </div>
             )}
           </DraggableWrapper>
@@ -522,10 +516,6 @@ const MobileDrawer = ({
   onAnimationEnd?: (open: boolean) => void
 }) => {
   const [zIndex, setZIndex] = React.useState(baseZIndex)
-  const { style: glassStyle } = useLiquidGlass({ intensity: "medium", satin: true })
-  const { style: glassIconStyle } = useLiquidGlass({ intensity: "subtle", variant: "natural" })
-  const { style: footerGlassStyle } = useLiquidGlass({ intensity: "subtle", variant: "natural" })
-  const footerWithGlass = React.useMemo(() => applyGlassToFooterButtons(footer, footerGlassStyle), [footer, footerGlassStyle])
 
   React.useEffect(() => {
     if (isOpen) {
@@ -549,87 +539,52 @@ const MobileDrawer = ({
         />
         <Drawer.Content
           className={cn(
-            "bg-background flex flex-col rounded-t-[10px] fixed bottom-0 left-0 right-0 h-auto max-h-[100dvh]",
+            "bg-background flex flex-col rounded-t-2xl fixed bottom-0 left-0 right-0 h-auto max-h-[100dvh] border border-b-0 border-border",
             "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 duration-300 ease-in-out",
             className,
           )}
           style={{ zIndex }}
           aria-describedby={undefined}
         >
-          <div
-            className={cn(
-              "bg-transparent rounded-t-[10px] flex-1 min-h-0 px-0",
-            )}
-          >
-            <div className={cn("w-full max-w-none mx-0", "flex flex-col min-h-0")}>
-              <div
-                className="flex flex-col rounded-t-xl"
-                style={glassStyle}
-              >
-                <div className="mx-auto w-12 h-1.5 flex-shrink-0 rounded-full bg-zinc-300/50 mt-3 mb-3" />
-                <div className="flex items-center justify-between px-3 pb-3">
-                  <div className="flex items-center gap-2">
-                    {productImage && (
-                      productImage.startsWith("data:application/pdf") ? (
-                        <div className="w-6 h-6 rounded flex items-center justify-center bg-muted flex-shrink-0">
-                          <FileText className="h-3.5 w-3.5 text-primary" />
-                        </div>
-                      ) : (
-                        <img
-                          src={productImage || "/placeholder.svg"}
-                          alt={productName || "Producto"}
-                          className="w-6 h-6 rounded object-cover flex-shrink-0"
-                        />
-                      )
-                    )}
-                    <Drawer.Title className="font-medium text-foreground">{productName || title || "Modal"}</Drawer.Title>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8 bg-transparent hover:bg-transparent"
-                      style={glassIconStyle}
-                      onClick={onMaximize}
-                      aria-label="Pantalla completa"
-                    >
-                      <Maximize className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8 bg-transparent hover:bg-transparent"
-                      style={glassIconStyle}
-                      onClick={onMinimize}
-                      aria-label="Minimizar"
-                    >
-                      <Minus className="h-4 w-4" />
-                    </Button>
-                    <Drawer.Close asChild>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8 bg-transparent hover:bg-transparent"
-                        style={glassIconStyle}
-                        onClick={onClose}
-                        aria-label="Cerrar"
-                      >
-                        <X className="h-4 w-4" />
-                      </Button>
-                    </Drawer.Close>
-                  </div>
-                </div>
+          {/* Handle + Header */}
+          <div className="flex flex-col rounded-t-2xl bg-background flex-shrink-0">
+            {/* Drag handle pill */}
+            <div className="mx-auto w-10 h-1 rounded-full bg-muted-foreground/25 mt-3 mb-0" />
+            {/* Header row */}
+            <div className="flex items-center justify-between px-4 py-3 border-b border-border">
+              <div className="flex items-center gap-2">
+                {productImage && (
+                  productImage.startsWith("data:application/pdf") ? (
+                    <div className="w-6 h-6 rounded flex items-center justify-center bg-muted flex-shrink-0">
+                      <FileText className="h-3.5 w-3.5 text-primary" />
+                    </div>
+                  ) : (
+                    <img
+                      src={productImage || "/placeholder.svg"}
+                      alt={productName || "Producto"}
+                      className="w-6 h-6 rounded object-cover flex-shrink-0"
+                    />
+                  )
+                )}
+                <Drawer.Title className="font-bold text-lg text-foreground">{productName || title || "Modal"}</Drawer.Title>
               </div>
-              <div className="overflow-y-auto flex-1 min-h-0 max-h-[calc(100dvh-180px)] bg-background p-4 group/dialog-content" data-view="mobile">
-                {children}
-              </div>
-              {footerWithGlass && (
-                <div className="mt-0 pt-4 border-t pb-[env(safe-area-inset-bottom)] bg-background">
-                  <div className="flex justify-center gap-2 px-4 pb-4">{footerWithGlass}</div>
-                </div>
-              )}
+              <WindowControls
+                onMaximize={onMaximize}
+                onMinimize={onMinimize}
+                onClose={onClose}
+              />
             </div>
           </div>
+          {/* Content */}
+          <div className="overflow-y-auto flex-1 min-h-0 max-h-[calc(100dvh-180px)] bg-background p-4 group/dialog-content" data-view="mobile">
+            {children}
+          </div>
+          {/* Footer */}
+          {footer && (
+            <div className="border-t border-border pb-[env(safe-area-inset-bottom)] bg-background">
+              <div className="flex justify-center gap-2 px-4 py-3">{footer}</div>
+            </div>
+          )}
         </Drawer.Content>
       </Drawer.Portal>
     </Drawer.Root>
